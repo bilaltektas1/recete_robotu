@@ -9,8 +9,7 @@
 :root{
   --bg:#020617;
   --panel:#020617ee;
-  --panel-soft:#050b22;
-  --line:rgba(255,255,255,.15);
+  --line:rgba(255,255,255,.14);
   --text:#e5e7eb;
   --muted:#9ca3af;
 
@@ -25,35 +24,58 @@
 body{
   margin:0;
   font-family:Inter,Segoe UI,Arial;
-  background:radial-gradient(1200px 600px at 20% -10%,#0b1d3a,transparent),var(--bg);
+  background:var(--bg);
   color:var(--text);
 }
 
 .app{max-width:980px;margin:auto;padding:16px}
 
-/* ===== BANNER ===== */
+/* ===== ESKİ GÜZEL HAREKETLİ BANNER ===== */
 .banner{
   position:relative;
+  overflow:hidden;
   border-radius:26px;
   padding:30px;
-  background:
-    radial-gradient(circle at 20% 20%,rgba(56,189,248,.25),transparent 40%),
-    radial-gradient(circle at 80% 30%,rgba(167,139,250,.25),transparent 45%),
-    linear-gradient(120deg,#020617,#020617,#030b2f);
-  overflow:hidden;
+  background:linear-gradient(120deg,#22c55e,#0ea5e9,#6366f1);
+  background-size:300% 300%;
+  animation:grad 14s ease infinite;
+  color:#fff;
 }
+
 .banner::before,
 .banner::after{
   content:"";
   position:absolute;
-  inset:-50%;
-  background:repeating-radial-gradient(circle,rgba(255,255,255,.08) 0 1px,transparent 1px 40px);
-  animation:stars 90s linear infinite;
+  border-radius:50%;
+  background:rgba(255,255,255,.18);
+  animation:pulse 8s ease-in-out infinite;
 }
-.banner::after{animation-duration:160s;opacity:.4}
-@keyframes stars{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+.banner::before{
+  width:180px;height:180px;
+  top:-60px;left:-60px;
+}
+
+.banner::after{
+  width:260px;height:260px;
+  bottom:-100px;right:-100px;
+  animation-delay:3s;
+}
+
+@keyframes grad{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+@keyframes pulse{
+  0%{transform:scale(.6);opacity:.3}
+  50%{transform:scale(1.2);opacity:.15}
+  100%{transform:scale(.6);opacity:.3}
+}
+
 .banner h1{margin:0 0 6px;font-size:26px}
-.banner span{font-size:14px;color:#c7d2fe}
+.banner span{font-size:14px;opacity:.9}
 
 /* ===== SEARCH ===== */
 .search{margin:18px 0}
@@ -70,32 +92,16 @@ body{
 /* ===== CARD ===== */
 .card{
   margin-top:12px;
-  background:linear-gradient(180deg,var(--panel),var(--panel-soft));
+  background:var(--panel);
   border:1px solid var(--line);
   border-radius:22px;
   padding:16px;
-  position:relative;
+  transition:.3s;
 }
 
 .card.active{
-  outline:2px solid var(--ham);
-}
-
-/* Firework burst */
-.card.burst::after{
-  content:"";
-  position:absolute;
-  inset:-20%;
-  background:
-    radial-gradient(circle,var(--ham) 0 2px,transparent 3px),
-    radial-gradient(circle,var(--bobin) 0 2px,transparent 3px),
-    radial-gradient(circle,var(--koli) 0 2px,transparent 3px);
-  animation:burst .6s ease-out;
-  pointer-events:none;
-}
-@keyframes burst{
-  from{opacity:1;transform:scale(.2)}
-  to{opacity:0;transform:scale(1.4)}
+  border-color:var(--ham);
+  box-shadow:0 0 0 2px rgba(34,197,94,.35);
 }
 
 .card-head{
@@ -109,52 +115,55 @@ body{
   cursor:pointer;
 }
 
-.recipe{display:none;margin-top:14px}
-.card.open .recipe{display:block}
+.recipe{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .6s ease;
+}
+.card.open .recipe{max-height:3000px}
 
-/* ===== ROWS – SINGLE LINE ===== */
+/* ===== TABLO GÖRÜNÜMLÜ SATIRLAR ===== */
 .row{
   display:grid;
-  grid-template-columns:1.4fr 1fr 3fr 1fr;
-  gap:8px;
-  padding:12px 4px;
-  font-size:13px;
+  grid-template-columns:
+    40px        /* icon */
+    110px       /* kategori */
+    140px       /* stok kodu */
+    1fr         /* stok ismi */
+    90px;       /* miktar */
+
+  gap:10px;
+  padding:12px 0;
   border-bottom:1px solid var(--line);
-
-  white-space:nowrap;
-  overflow:hidden;
-}
-.row > div{
-  overflow:hidden;
-  text-overflow:ellipsis;
+  font-size:13px;
+  align-items:center;
 }
 
+.row span{
+  white-space:normal;
+  word-break:break-word;
+}
+
+.icon{font-size:18px}
+
+.cat{
+  font-weight:700;
+}
+
+.code{color:#c7d2fe}
+.qty{
+  text-align:right;
+  font-weight:800;
+}
+
+/* RENKLER */
 .row.ham{color:var(--ham)}
 .row.bobin{color:var(--bobin)}
 .row.koli{color:var(--koli)}
 .row.yard{color:var(--yard)}
 
-.col-muted{color:var(--muted)}
-
-/* ===== ACTIONS ===== */
-.actions{
-  display:flex;
-  gap:10px;
-  margin-top:14px;
-}
-.btn{
-  flex:1;
-  padding:12px;
-  border:none;
-  border-radius:14px;
-  font-weight:700;
-  color:#fff;
-}
-.btn-print{background:#22c55e}
-.btn-wa{background:#25D366}
-
 footer{
-  margin:34px 0 10px;
+  margin:36px 0 10px;
   text-align:center;
   font-size:11px;
   color:var(--muted);
@@ -167,7 +176,7 @@ footer{
 
 <div class="banner">
   <h1>Yapay Zeka & Reçete Analiz Robotu</h1>
-  <span>Akıllı Stok • Üretim • Mobil Analiz</span>
+  <span>Akıllı Stok • Üretim • Mobil ERP</span>
 </div>
 
 <div class="search">
@@ -4402,31 +4411,41 @@ Hammadde Toplamı	5,264000
 <script>
 const norm=s=>s.toLowerCase().replace(/ı/g,"i");
 
-function category(item){
-  if(/^07/.test(item.code)) return ["🌿 Hammadde","ham"];
-  if(/opp|bobin|rulo/i.test(item.name)) return ["🎞 Bobin","bobin"];
-  if(/koli|omk/i.test(item.name)) return ["📦 Koli","koli"];
-  return ["🧩 Yardımcı Malzeme","yard"];
-}
-
 function parseERP(text){
-  const lines=text.split("\n");
+  const lines=text.split(/\r?\n/);
   const products=[];
   let current=null;
 
   for(const raw of lines){
     if(!raw.trim()) continue;
-    if(!raw.startsWith(" ") && /\t1,000000/.test(raw)){
+
+    if(!raw.startsWith(" ") && raw.includes("\t1,")){
       const [code,name]=raw.split("\t");
       current={code,name,items:[]};
       products.push(current);
+      continue;
     }
+
     if(current && raw.startsWith(" ")){
-      const c=raw.trim().split("\t");
-      current.items.push({code:c[0],name:c[1],qty:c[2]});
+      const p=raw.trim().split("\t");
+      if(p.length>=3){
+        current.items.push({code:p[0],name:p[1],qty:p[2]});
+      }
     }
   }
   return products;
+}
+
+function category(i){
+  if(/^07/.test(i.code)) return ["🌿","HAMMADDE","ham"];
+  if(/opp|bobin|rulo/i.test(i.name)) return ["🎞️","BOBİN","bobin"];
+  if(/koli|omk/i.test(i.name)) return ["📦","KOLİ","koli"];
+  if(/etiket/i.test(i.name)) return ["🏷️","ETİKET","yard"];
+  if(/seperat/i.test(i.name)) return ["📐","SEPERATÖR","yard"];
+  if(/köşebent/i.test(i.name)) return ["🧱","KÖŞEBENT","yard"];
+  if(/palet/i.test(i.name)) return ["🪵","PALET","yard"];
+  if(/streç/i.test(i.name)) return ["🎞️","STREÇ","yard"];
+  return ["🧩","YARDIMCI","yard"];
 }
 
 const DATA=parseERP(RAW_DATA.value);
@@ -4453,49 +4472,30 @@ search.oninput=()=>{
 
       <div class="recipe">
         ${p.items.map(i=>{
-          const [label,cls]=category(i);
+          const [icon,label,cls]=category(i);
           return`
           <div class="row ${cls}">
-            <div>${label}</div>
-            <div class="col-muted">${i.code}</div>
-            <div>${i.name}</div>
-            <div>${i.qty}</div>
+            <span class="icon">${icon}</span>
+            <span class="cat">${label}</span>
+            <span class="code">${i.code}</span>
+            <span>${i.name}</span>
+            <span class="qty">${i.qty}</span>
           </div>`;
         }).join("")}
-
-        <div class="actions">
-          <button class="btn btn-print" onclick="event.stopPropagation();window.print()">🖨 Yazdır</button>
-          <button class="btn btn-wa" onclick="event.stopPropagation();shareWA(this)">WhatsApp</button>
-        </div>
       </div>
     `;
 
-    card.querySelector(".card-code").onclick=(e)=>{
-      e.stopPropagation();
-      card.classList.toggle("open");
-      card.classList.add("burst");
-      setTimeout(()=>card.classList.remove("burst"),600);
-    };
-
     card.onclick=()=>{
-      card.classList.add("active","open","burst");
       activeRecipe.innerHTML="";
       activeRecipe.appendChild(card);
+      card.classList.toggle("open");
+      card.classList.add("active");
       activeRecipe.scrollIntoView({behavior:"smooth",block:"start"});
-      setTimeout(()=>card.classList.remove("burst"),600);
     };
 
     results.appendChild(card);
   });
 };
-
-function shareWA(btn){
-  const card=btn.closest(".card");
-  let text="🤖 Yapay Zeka & Reçete Analiz Robotu\n\n";
-  card.querySelectorAll(".row").forEach(r=>text+=r.innerText+"\n");
-  text+="\n© Bilal Tektaş";
-  window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank");
-}
 </script>
 </body>
 </html>
