@@ -13,54 +13,45 @@
   --line:rgba(0,0,0,.08);
   --text:#111827;
   --muted:#6b7280;
-
   --ham:#22c55e;
   --bobin:#38bdf8;
   --koli:#f59e0b;
   --yard:#a78bfa;
-
   --transition:.35s ease-in-out;
 }
-body.dark{
-  --bg:#020617;
-  --panel:#020617ee;
-  --panel-soft:#050b22;
-  --line:rgba(255,255,255,.15);
-  --text:#e5e7eb;
-  --muted:#9ca3af;
-}
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Segoe UI,Arial}
+body.dark{--bg:#020617;--panel:#020617ee;--panel-soft:#050b22;--line:rgba(255,255,255,.15);--text:#e5e7eb;--muted:#9ca3af;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Segoe UI,Arial;}
 body{background:var(--bg);color:var(--text);transition: background var(--transition), color var(--transition);}
 .app{max-width:980px;margin:auto;padding:16px}
 .theme-toggle{position:fixed;top:16px;right:16px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:600;z-index:1000;transition: all var(--transition);}
-.banner{position:relative;border-radius:26px;padding:30px;background:linear-gradient(120deg,#22c55e,#38bdf8,#f59e0b,#a78bfa);background-size:600% 600%;animation:gradientAnim 15s ease infinite;color:#fff;margin-bottom:16px;overflow:hidden;}
-.banner h1{margin:0 0 6px;font-size:26px}
-.banner span{font-size:14px;color:#fff}
+.banner{position:relative;border-radius:26px;padding:30px;background:linear-gradient(270deg,#22c55e,#38bdf8,#f59e0b,#a78bfa);background-size:800% 800%;animation:gradientAnim 20s ease infinite;color:#fff;margin-bottom:16px;overflow:hidden;}
+.banner h1{margin:0 0 6px;font-size:26px;letter-spacing:1px;}
+.banner span{font-size:14px;color:#fff;}
 @keyframes gradientAnim{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .search{margin:18px 0}
 .search input{width:100%;padding:16px;border-radius:18px;background:var(--panel);border:1px solid var(--line);color:var(--text);font-size:16px;transition: all var(--transition);}
-.card{margin-top:12px;background:linear-gradient(180deg,var(--panel),var(--panel-soft));border:1px solid var(--line);border-radius:22px;padding:16px;position:relative;cursor:pointer;overflow:hidden;transition: transform .2s ease, box-shadow .2s ease;}
-.card:hover{transform:scale(1.01);box-shadow:0 6px 18px rgba(0,0,0,.1);}
-.card.active{outline:2px solid var(--ham);animation:shake .3s;}
+.card{margin-top:12px;background:linear-gradient(180deg,var(--panel),var(--panel-soft));border:1px solid var(--line);border-radius:22px;padding:16px;position:relative;cursor:pointer;overflow:hidden;transition: transform .25s ease, box-shadow .25s ease;}
+.card:hover{transform:scale(1.02);box-shadow:0 10px 25px rgba(0,0,0,.15);}
+.card.active{outline:2px solid var(--ham);}
 .card-head{display:flex;justify-content:space-between;align-items:center;}
 .card-code{font-weight:800;cursor:pointer}
-.recipe{display:none;margin-top:14px;opacity:0;max-height:0;overflow:hidden;transition:max-height .35s ease, opacity .35s ease;}
+.recipe{display:none;margin-top:14px;opacity:0;max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(0.4,0,0.2,1), opacity .35s ease;}
 .card.open .recipe{display:block;opacity:1;max-height:2000px;}
-.row{display:grid;grid-template-columns:1.2fr 1fr 3fr 1fr;gap:10px;padding:14px 6px;font-size:13px;border-bottom:1px solid var(--line);align-items:center;}
-.row.ham{color:var(--ham)}
-.row.bobin{color:var(--bobin)}
-.row.koli{color:var(--koli)}
-.row.yard{color:var(--yard)}
-.col-muted{color:var(--muted)}
-.row div:first-child{font-size:18px}
-@media(max-width:600px){.row{grid-template-columns:1fr;gap:6px;padding:12px 10px;}.row div:first-child{font-size:20px;margin-bottom:2px;}}
+.row{display:grid;grid-template-columns:1.2fr 1fr 3fr 1fr;gap:10px;padding:10px 6px;font-size:13px;border-bottom:1px solid var(--line);align-items:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.row.ham{color:var(--ham);}
+.row.bobin{color:var(--bobin);}
+.row.koli{color:var(--koli);}
+.row.yard{color:var(--yard);}
+.col-muted{color:var(--muted);}
+.row div:first-child{font-size:18px;}
+@media(max-width:600px){.row{grid-template-columns:1fr;gap:6px;padding:10px 8px;}.row div:first-child{font-size:18px;margin-bottom:2px;}}
 .actions{display:flex;gap:10px;margin-top:14px}
 .btn{flex:1;padding:12px;border:none;border-radius:14px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s ease;}
 .btn:hover{opacity:.9;transform:scale(1.03);}
-.btn-print{background:#22c55e}
-.btn-wa{background:#25D366}
+.btn-print{background:#22c55e;}
+.btn-wa{background:#25D366;}
 footer{margin:34px 0 10px;text-align:center;font-size:11px;color:var(--muted);}
-@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-2px);}40%,80%{transform:translateX(2px);}}
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-3px);}40%,80%{transform:translateX(3px);}}
 </style>
 </head>
 <body>
@@ -4296,22 +4287,15 @@ Hammadde Toplamı	5,264000
 </div>
 <script>
 const norm=s=>s.toLowerCase().replace(/ı/g,"i");
-
 function category(item){
   const name=item.name.toLowerCase();
   const code=item.code;
-  // Hammadde: 07xx kodu veya isimde kraft/çuv(al)?/pp çuval/25kg/50kg
   if(/^07\d{2}/.test(code) || /kraft|çuv(al)?|pp çuval|25 kg|50 kg/.test(name)) return ["🌿 Hammadde","ham"];
-  // Bobin: opp, bobin, rulo
   if(/opp|bobin|rulo/.test(name)) return ["🎞 Bobin","bobin"];
-  // Koli: koli, omk
   if(/koli|omk/.test(name)) return ["📦 Koli","koli"];
-  // Palet: palet, turpal
   if(/palet|turpal/.test(name)) return ["🧩 Yardımcı","yard"];
-  // Yardımcı malzeme: diğer her şey
   return ["🧩 Yardımcı","yard"];
 }
-
 function parseERP(text){
   const lines=text.split("\n");
   const products=[];
@@ -4330,12 +4314,10 @@ function parseERP(text){
   }
   return products;
 }
-
 const RAW_DATA=document.getElementById("RAW_DATA");
 const DATA=parseERP(RAW_DATA.value);
 const results=document.getElementById("results");
 const activeRecipe=document.getElementById("activeRecipe");
-
 document.getElementById("search").oninput=()=>{
   results.innerHTML="";
   const q=norm(search.value);
@@ -4372,7 +4354,11 @@ document.getElementById("search").oninput=()=>{
     card.onclick=()=>{
       const open=card.classList.contains("open");
       document.querySelectorAll(".card").forEach(c=>c.classList.remove("active","open"));
-      if(!open){card.classList.add("active","open");card.style.animation="shake .3s";setTimeout(()=>card.style.animation="",300);}
+      if(!open){
+        card.classList.add("active","open");
+        card.style.animation="shake .3s";
+        setTimeout(()=>card.style.animation="",300);
+      }
       activeRecipe.innerHTML="";
       activeRecipe.appendChild(card);
       activeRecipe.scrollIntoView({behavior:"smooth",block:"start"});
@@ -4380,7 +4366,6 @@ document.getElementById("search").oninput=()=>{
     results.appendChild(card);
   });
 };
-
 function shareWA(btn){
   const card=btn.closest(".card");
   let text="🤖 Yapay Zeka & Reçete Analiz Robotu\n\n";
@@ -4388,18 +4373,16 @@ function shareWA(btn){
   text+="\n© Bilal Tektaş";
   window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank");
 }
-
 function printRecipe(btn){
   const card=btn.closest(".card");
   const newWin=window.open('', '_blank');
-  newWin.document.write('<html><head><title>Yazdır</title><style>body{font-family:Inter,Segoe UI,Arial;padding:20px;} .row{display:grid;grid-template-columns:1.2fr 1fr 3fr 1fr;gap:10px;padding:8px;border-bottom:1px solid #ccc;}</style></head><body>');
+  newWin.document.write('<html><head><title>Yazdır</title><style>body{font-family:Inter,Segoe UI,Arial;padding:20px;} .row{display:grid;grid-template-columns:1.2fr 1fr 3fr 1fr;gap:10px;padding:8px;border-bottom:1px solid #ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}</style></head><body>');
   newWin.document.write('<h2>'+card.querySelector('small').innerText+'</h2>');
   card.querySelectorAll('.row').forEach(r=>newWin.document.write(r.outerHTML));
   newWin.document.write('</body></html>');
   newWin.document.close();
   newWin.print();
 }
-
 function toggleTheme(){
   document.body.classList.toggle("dark");
   document.querySelector(".theme-toggle").innerText=document.body.classList.contains("dark")?"☀️ Tema":"🌙 Tema";
