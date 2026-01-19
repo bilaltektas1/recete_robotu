@@ -4,158 +4,78 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yapay Zeka & Reçete Analiz Robotu</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
+  --bg:#f5f5f5;
+  --panel:#ffffff;
+  --panel-soft:#f0f0f0;
+  --line:rgba(0,0,0,.08);
+  --text:#111827;
+  --muted:#6b7280;
+
+  --ham:#22c55e;
+  --bobin:#38bdf8;
+  --koli:#f59e0b;
+  --yard:#a78bfa;
+
+  --transition:.35s ease-in-out;
+}
+body.dark{
   --bg:#020617;
   --panel:#020617ee;
   --panel-soft:#050b22;
   --line:rgba(255,255,255,.15);
   --text:#e5e7eb;
   --muted:#9ca3af;
-
-  --ham:#22c55e;
-  --bobin:#38bdf8;
-  --koli:#f59e0b;
-  --yard:#a78bfa;
 }
-
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Inter,Segoe UI,Arial;
-  background:radial-gradient(1200px 600px at 20% -10%,#0b1d3a,transparent),var(--bg);
-  color:var(--text);
-}
-
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Segoe UI,Arial}
+body{background:var(--bg);color:var(--text);transition: background var(--transition), color var(--transition);}
 .app{max-width:980px;margin:auto;padding:16px}
-
-/* ===== BANNER ===== */
-.banner{
-  position:relative;
-  border-radius:26px;
-  padding:30px;
-  background:
-    radial-gradient(circle at 20% 20%,rgba(56,189,248,.25),transparent 40%),
-    radial-gradient(circle at 80% 30%,rgba(167,139,250,.25),transparent 45%),
-    linear-gradient(120deg,#020617,#020617,#030b2f);
-  overflow:hidden;
-}
-.banner::before,
-.banner::after{
-  content:"";
-  position:absolute;
-  inset:-50%;
-  background:repeating-radial-gradient(circle,rgba(255,255,255,.08) 0 1px,transparent 1px 40px);
-  animation:stars 90s linear infinite;
-}
-.banner::after{animation-duration:160s;opacity:.4}
-@keyframes stars{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.theme-toggle{position:fixed;top:16px;right:16px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:600;z-index:1000;transition: all var(--transition);}
+.banner{position:relative;border-radius:26px;padding:30px;background:linear-gradient(120deg,#22c55e,#38bdf8,#f59e0b,#a78bfa);background-size:600% 600%;animation:gradientAnim 15s ease infinite;color:#fff;margin-bottom:16px;overflow:hidden;}
 .banner h1{margin:0 0 6px;font-size:26px}
-.banner span{font-size:14px;color:#c7d2fe}
-
-/* ===== SEARCH ===== */
+.banner span{font-size:14px;color:#fff}
+@keyframes gradientAnim{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .search{margin:18px 0}
-.search input{
-  width:100%;
-  padding:16px;
-  border-radius:18px;
-  background:var(--panel);
-  border:1px solid var(--line);
-  color:var(--text);
-  font-size:16px;
-}
-
-/* ===== CARD ===== */
-.card{
-  margin-top:12px;
-  background:linear-gradient(180deg,var(--panel),var(--panel-soft));
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:16px;
-  position:relative;
-}
-.card.active{outline:2px solid var(--ham)}
-
-.card-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
+.search input{width:100%;padding:16px;border-radius:18px;background:var(--panel);border:1px solid var(--line);color:var(--text);font-size:16px;transition: all var(--transition);}
+.card{margin-top:12px;background:linear-gradient(180deg,var(--panel),var(--panel-soft));border:1px solid var(--line);border-radius:22px;padding:16px;position:relative;cursor:pointer;overflow:hidden;transition: transform .2s ease, box-shadow .2s ease;}
+.card:hover{transform:scale(1.01);box-shadow:0 6px 18px rgba(0,0,0,.1);}
+.card.active{outline:2px solid var(--ham);animation:shake .3s;}
+.card-head{display:flex;justify-content:space-between;align-items:center;}
 .card-code{font-weight:800;cursor:pointer}
-
-.recipe{display:none;margin-top:14px}
-.card.open .recipe{display:block}
-
-/* ===== ROW ===== */
-.row{
-  display:grid;
-  grid-template-columns:1.4fr 1fr 3fr 1fr;
-  gap:10px;
-  padding:14px 6px;
-  font-size:13px;
-  border-bottom:1px solid var(--line);
-}
-
+.recipe{display:none;margin-top:14px;opacity:0;max-height:0;overflow:hidden;transition:max-height .35s ease, opacity .35s ease;}
+.card.open .recipe{display:block;opacity:1;max-height:2000px;}
+.row{display:grid;grid-template-columns:1.2fr 1fr 3fr 1fr;gap:10px;padding:14px 6px;font-size:13px;border-bottom:1px solid var(--line);align-items:center;}
 .row.ham{color:var(--ham)}
 .row.bobin{color:var(--bobin)}
 .row.koli{color:var(--koli)}
 .row.yard{color:var(--yard)}
 .col-muted{color:var(--muted)}
-
-/* ===== MOBILE READABLE ===== */
-@media(max-width:600px){
-  .row{
-    grid-template-columns:1fr;
-    gap:6px;
-    padding:14px 10px;
-  }
-}
-
-/* ===== ACTIONS ===== */
-.actions{
-  display:flex;
-  gap:10px;
-  margin-top:14px;
-}
-.btn{
-  flex:1;
-  padding:12px;
-  border:none;
-  border-radius:14px;
-  font-weight:700;
-  color:#fff;
-}
+.row div:first-child{font-size:18px}
+@media(max-width:600px){.row{grid-template-columns:1fr;gap:6px;padding:12px 10px;}.row div:first-child{font-size:20px;margin-bottom:2px;}}
+.actions{display:flex;gap:10px;margin-top:14px}
+.btn{flex:1;padding:12px;border:none;border-radius:14px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s ease;}
+.btn:hover{opacity:.9;transform:scale(1.03);}
 .btn-print{background:#22c55e}
 .btn-wa{background:#25D366}
-
-footer{
-  margin:34px 0 10px;
-  text-align:center;
-  font-size:11px;
-  color:var(--muted);
-}
+footer{margin:34px 0 10px;text-align:center;font-size:11px;color:var(--muted);}
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-2px);}40%,80%{transform:translateX(2px);}}
 </style>
 </head>
-
 <body>
+<div class="theme-toggle" onclick="toggleTheme()">🌙 Tema</div>
 <div class="app">
-
 <div class="banner">
   <h1>Yapay Zeka & Reçete Analiz Robotu</h1>
   <span>Akıllı Stok • Üretim • Mobil Analiz</span>
 </div>
-
 <div class="search">
   <input id="search" placeholder="Stok kodu veya ürün adı yaz">
 </div>
-
 <div id="activeRecipe"></div>
 <div id="results"></div>
-
 <footer>© Bilal Tektaş</footer>
-
 <textarea id="RAW_DATA" style="display:none">
 Stok Kodu	Stok İsmi	Miktar
 025010335	KAKULE TANE İYİ 5 KG KOLİ	1,000000
@@ -4373,16 +4293,22 @@ Malzeme Maliyeti	0,00
 Hammadde Toplamı	5,264000	
 
 </textarea>
-
 </div>
-
 <script>
 const norm=s=>s.toLowerCase().replace(/ı/g,"i");
 
 function category(item){
-  if(/^07/.test(item.code)) return ["🌿 Hammadde","ham"];
-  if(/opp|bobin|rulo/i.test(item.name)) return ["🎞 Bobin","bobin"];
-  if(/koli|omk/i.test(item.name)) return ["📦 Koli","koli"];
+  const name=item.name.toLowerCase();
+  const code=item.code;
+  // Hammadde: 07xx kodu veya isimde kraft/çuv(al)?/pp çuval/25kg/50kg
+  if(/^07\d{2}/.test(code) || /kraft|çuv(al)?|pp çuval|25 kg|50 kg/.test(name)) return ["🌿 Hammadde","ham"];
+  // Bobin: opp, bobin, rulo
+  if(/opp|bobin|rulo/.test(name)) return ["🎞 Bobin","bobin"];
+  // Koli: koli, omk
+  if(/koli|omk/.test(name)) return ["📦 Koli","koli"];
+  // Palet: palet, turpal
+  if(/palet|turpal/.test(name)) return ["🧩 Yardımcı","yard"];
+  // Yardımcı malzeme: diğer her şey
   return ["🧩 Yardımcı","yard"];
 }
 
@@ -4390,7 +4316,6 @@ function parseERP(text){
   const lines=text.split("\n");
   const products=[];
   let current=null;
-
   for(const raw of lines){
     if(!raw.trim()) continue;
     if(!raw.startsWith(" ") && /\t1,000000/.test(raw)){
@@ -4406,15 +4331,15 @@ function parseERP(text){
   return products;
 }
 
+const RAW_DATA=document.getElementById("RAW_DATA");
 const DATA=parseERP(RAW_DATA.value);
 const results=document.getElementById("results");
 const activeRecipe=document.getElementById("activeRecipe");
 
-search.oninput=()=>{
+document.getElementById("search").oninput=()=>{
   results.innerHTML="";
   const q=norm(search.value);
   if(!q) return;
-
   DATA.filter(p=>{
     if(norm(p.code).includes(q)||norm(p.name).includes(q)) return true;
     return p.items.some(i=>norm(i.code).includes(q)||norm(i.name).includes(q));
@@ -4427,11 +4352,10 @@ search.oninput=()=>{
         <span>⌄</span>
       </div>
       <small>${p.name}</small>
-
       <div class="recipe">
         ${p.items.map(i=>{
           const [label,cls]=category(i);
-          return`
+          return `
           <div class="row ${cls}">
             <div>${label}</div>
             <div class="col-muted">${i.code}</div>
@@ -4439,26 +4363,20 @@ search.oninput=()=>{
             <div>${i.qty}</div>
           </div>`;
         }).join("")}
-
         <div class="actions">
-          <button class="btn btn-print" onclick="event.stopPropagation();window.print()">🖨 Yazdır</button>
+          <button class="btn btn-print" onclick="event.stopPropagation();printRecipe(this)">🖨 Yazdır</button>
           <button class="btn btn-wa" onclick="event.stopPropagation();shareWA(this)">WhatsApp</button>
         </div>
       </div>
     `;
-
-    card.querySelector(".card-code").onclick=(e)=>{
-      e.stopPropagation();
-      card.classList.toggle("open");
-    };
-
     card.onclick=()=>{
-      card.classList.add("active","open");
+      const open=card.classList.contains("open");
+      document.querySelectorAll(".card").forEach(c=>c.classList.remove("active","open"));
+      if(!open){card.classList.add("active","open");card.style.animation="shake .3s";setTimeout(()=>card.style.animation="",300);}
       activeRecipe.innerHTML="";
       activeRecipe.appendChild(card);
       activeRecipe.scrollIntoView({behavior:"smooth",block:"start"});
     };
-
     results.appendChild(card);
   });
 };
@@ -4469,6 +4387,22 @@ function shareWA(btn){
   card.querySelectorAll(".row").forEach(r=>text+=r.innerText+"\n");
   text+="\n© Bilal Tektaş";
   window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank");
+}
+
+function printRecipe(btn){
+  const card=btn.closest(".card");
+  const newWin=window.open('', '_blank');
+  newWin.document.write('<html><head><title>Yazdır</title><style>body{font-family:Inter,Segoe UI,Arial;padding:20px;} .row{display:grid;grid-template-columns:1.2fr 1fr 3fr 1fr;gap:10px;padding:8px;border-bottom:1px solid #ccc;}</style></head><body>');
+  newWin.document.write('<h2>'+card.querySelector('small').innerText+'</h2>');
+  card.querySelectorAll('.row').forEach(r=>newWin.document.write(r.outerHTML));
+  newWin.document.write('</body></html>');
+  newWin.document.close();
+  newWin.print();
+}
+
+function toggleTheme(){
+  document.body.classList.toggle("dark");
+  document.querySelector(".theme-toggle").innerText=document.body.classList.contains("dark")?"☀️ Tema":"🌙 Tema";
 }
 </script>
 </body>
