@@ -29,10 +29,9 @@ body{
 }
 
 *{box-sizing:border-box}
-
 .app{max-width:100%;padding:16px}
 
-/* ===== BANNER ===== */
+/* ===== BANNER (AYNI) ===== */
 .banner{
   border-radius:24px;
   padding:28px 22px;
@@ -82,10 +81,7 @@ body{
   animation:shake .35s;
 }
 
-.card-head{
-  font-weight:800;
-  font-size:17px;
-}
+.card-head{font-weight:800;font-size:17px}
 .card-sub{
   font-size:13px;
   color:var(--muted);
@@ -96,10 +92,7 @@ body{
   overflow:hidden;
 }
 
-.recipe{
-  display:none;
-  margin-top:12px;
-}
+.recipe{display:none;margin-top:12px}
 .card.open .recipe{display:block}
 
 /* ===== STICKY HEADER ===== */
@@ -113,7 +106,7 @@ body{
   z-index:10;
 }
 
-/* ===== MOBILE ITEM CARD ===== */
+/* ===== MOBILE ITEM ===== */
 .item{
   border-radius:18px;
   padding:14px;
@@ -156,7 +149,6 @@ body{
 }
 .print{background:var(--ok);color:#fff}
 .share{background:#334155;color:#fff}
-
 </style>
 </head>
 
@@ -164,12 +156,12 @@ body{
 <div class="app">
 
 <div class="banner">
-  <h1>🧾 Akıllı Stok & Reçete</h1>
-  <span>🌿 🎞️ 📦 🧩 Mobil Analiz</span>
+  <h1>🧾 Akıllı Stok & Reçete Analizi</h1>
+  <span>🌿 Hammadde • 🎞️ Bobin • 📦 Koli • 🧩 Yardımcı</span>
 </div>
 
 <div class="search">
-  <input id="search" placeholder="🔍 Stok kodu veya adı">
+  <input id="search" placeholder="🔍 Stok kodu veya ürün adı">
 </div>
 
 <div id="results"></div>
@@ -4403,62 +4395,107 @@ function formatQty(n){
   return s;
 }
 
-function cat(i){
-  if(/^07/.test(i.code)||/kraft|çuval|pp/i.test(i.name)) return ["🌿 HAMMADDE","ham"];
-  if(/bobin|opp/i.test(i.name)) return ["🎞️ BOBİN","bobin"];
-  if(/koli|omk/i.test(i.name)) return ["📦 KOLİ","koli"];
+/* ===== GÜVENLİ KATEGORİ MANTIĞI ===== */
+function category(item){
+  const n = norm(item.name);
+
+  // 1️⃣ BOBİN – HER ZAMAN ÖNCE
+  if (
+    n.includes("bobin") ||
+    n.includes("opp") ||
+    n.includes("rulo") ||
+    n.includes("film") ||
+    n.includes("pp rulo") ||
+    n.includes("opp-bobin")
+  ) {
+    return ["🎞️ BOBİN","bobin"];
+  }
+
+  // 2️⃣ HAMMADDE
+  if (
+    /^07/.test(item.code) ||
+    n.includes("kraft") ||
+    n.includes("çuval") ||
+    n.includes("pp çuval") ||
+    n.includes("granül") ||
+    n.includes("toz")
+  ) {
+    return ["🌿 HAMMADDE","ham"];
+  }
+
+  // 3️⃣ KOLİ
+  if (n.includes("koli") || n.includes("omk")) {
+    return ["📦 KOLİ","koli"];
+  }
+
   return ["🧩 YARDIMCI","yard"];
 }
 
-function parse(t){
-  const l=t.split("\n"),p=[];let c=null;
-  for(const r of l){
-    if(!r.trim())continue;
-    if(!r.startsWith(" ")&&/\t1,000000/.test(r)){
-      const[a,b]=r.split("\t");c={code:a,name:b,items:[]};p.push(c);continue;
+function parse(text){
+  const lines=text.split("\n");
+  const products=[];
+  let current=null;
+
+  for(const raw of lines){
+    if(!raw.trim()) continue;
+    if(!raw.startsWith(" ") && /\t1,000000/.test(raw)){
+      const [code,name]=raw.split("\t");
+      current={code,name,items:[]};
+      products.push(current);
+      continue;
     }
-    if(c&&r.startsWith(" ")){
-      const x=r.trim().split("\t");
-      c.items.push({code:x[0],name:x[1],qty:+x[2].replace(",","." )});
+    if(current && raw.startsWith(" ")){
+      const c=raw.trim().split("\t");
+      current.items.push({
+        code:c[0],
+        name:c[1],
+        qty:+c[2].replace(",",".")
+      });
     }
   }
-  return p;
+  return products;
 }
 
-const DATA=parse(RAW_DATA.value),res=results;
+const DATA=parse(RAW_DATA.value);
+const results=document.getElementById("results");
 
 search.oninput=()=>{
-  res.innerHTML="";
-  const q=norm(search.value); if(!q)return;
+  results.innerHTML="";
+  const q=norm(search.value);
+  if(!q) return;
+
   DATA.filter(p=>norm(p.code).includes(q)||norm(p.name).includes(q))
   .forEach(p=>{
-    const exact=norm(p.code)===q||norm(p.name)===q;
+    const exact = norm(p.code)===q || norm(p.name)===q;
     const card=document.createElement("div");
     card.className="card"+(exact?" match":"");
+
     card.innerHTML=`
       <div class="card-head">${p.code}</div>
       <div class="card-sub">${p.name}</div>
+
       <div class="recipe">
-        <div class="sticky">
-          <b>${p.code}</b><br>${p.name}
-        </div>
+        <div class="sticky"><b>${p.code}</b><br>${p.name}</div>
+
         ${p.items.map(i=>{
-          const[c,cls]=cat(i);
+          const [t,cls]=category(i);
           return `
           <div class="item ${cls}">
-            <b>${c}</b>
+            <b>${t}</b>
             <div>${i.code}</div>
             <div class="name">${i.name}</div>
             <div class="qty">${formatQty(i.qty)}</div>
           </div>`;
         }).join("")}
+
         <div class="actions">
           <button class="print" onclick="event.stopPropagation();printCard(this)">🖨️ Yazdır</button>
-          <button class="share" onclick="event.stopPropagation();share('${p.code}')">📤 Paylaş</button>
+          <button class="share" onclick="event.stopPropagation();shareImage(this)">📤 Paylaş</button>
         </div>
-      </div>`;
+      </div>
+    `;
     card.onclick=()=>card.classList.toggle("open");
-    res.appendChild(card);
+    results.appendChild(card);
   });
 };
 
@@ -4466,12 +4503,51 @@ function printCard(btn){
   const c=btn.closest(".card");
   const w=window.open("","","width=400");
   w.document.write(`<body>${c.innerHTML}</body>`);
-  w.print();w.close();
+  w.print(); w.close();
 }
 
-function share(t){
-  if(navigator.share) navigator.share({title:"Reçete",text:t});
-  else alert("Paylaşım desteklenmiyor");
+/* ===== SADECE MOBİL – GÖRSEL PAYLAŞIM ===== */
+function shareImage(btn){
+  if(!navigator.share) return alert("Paylaşım desteklenmiyor");
+
+  const card=btn.closest(".card");
+  const canvas=document.createElement("canvas");
+  const ctx=canvas.getContext("2d");
+
+  const items=card.querySelectorAll(".item");
+  canvas.width=900;
+  canvas.height=200 + items.length*120;
+
+  ctx.fillStyle="#ffffff";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle="#111";
+  ctx.font="bold 28px Arial";
+  ctx.fillText(card.querySelector(".card-head").innerText,30,40);
+  ctx.font="18px Arial";
+  ctx.fillText(card.querySelector(".card-sub").innerText,30,70);
+
+  let y=120;
+  items.forEach(it=>{
+    ctx.fillStyle="#f1f5f9";
+    ctx.fillRect(20,y,canvas.width-40,100);
+    ctx.fillStyle="#111";
+    ctx.font="bold 16px Arial";
+    ctx.fillText(it.children[0].innerText,30,y+28);
+    ctx.font="14px Arial";
+    ctx.fillText(it.children[1].innerText,30,y+50);
+    ctx.fillText(it.children[2].innerText,30,y+70);
+    ctx.font="bold 18px Arial";
+    ctx.fillText(it.children[3].innerText,canvas.width-120,y+60);
+    y+=120;
+  });
+
+  canvas.toBlob(b=>{
+    navigator.share({
+      files:[new File([b],"recete.png",{type:"image/png"})],
+      title:"Reçete"
+    });
+  });
 }
 </script>
 </body>
