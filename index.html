@@ -34,7 +34,7 @@ body.dark{
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Segoe UI,Arial;}
 body{background:var(--bg);color:var(--text);}
 
-/* 🧭 APP BAR */
+/* APP BAR */
 .app-bar{
   position:fixed;
   top:0;
@@ -61,7 +61,6 @@ body{background:var(--bg);color:var(--text);}
   background:var(--soft);
 }
 
-/* LEGEND */
 .legend{
   display:flex;
   gap:12px;
@@ -80,10 +79,10 @@ body{background:var(--bg);color:var(--text);}
 .app{
   max-width:980px;
   margin:auto;
-  padding:140px 14px 20px;
+  padding:140px 14px 30px;
 }
 
-/* 🔥 BANNER */
+/* BANNER */
 .banner{
   border-radius:26px;
   padding:28px;
@@ -123,26 +122,51 @@ body{background:var(--bg);color:var(--text);}
 .recipe{display:none;margin-top:12px;}
 .card.open .recipe{display:block}
 
-/* ROW */
+/* ROW – TEST EDİLMİŞ */
 .row{
   display:grid;
-  grid-template-columns:34px 1fr 2.4fr 1fr;
-  gap:8px;
-  padding:8px 4px;
+  grid-template-columns:40px 1fr;
+  gap:10px;
+  padding:10px 6px;
   border-bottom:1px solid var(--line);
-  font-size:13px;
-  align-items:center;
-  white-space:nowrap;
-  overflow:hidden;
 }
 
-.icon{text-align:center;font-size:18px;}
-.col-muted{color:var(--muted)}
+.icon{
+  font-size:20px;
+  text-align:center;
+  line-height:1.2;
+}
 
+.row-content{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4px 8px;
+  font-size:13px;
+}
+
+.code{
+  color:var(--muted);
+  font-weight:600;
+}
+
+.qty{
+  text-align:right;
+  font-weight:700;
+}
+
+.name{
+  grid-column:1 / -1;
+  font-size:14px;
+  line-height:1.4;
+  word-break:break-word;
+  white-space:normal;
+}
+
+/* ACTIONS */
 .actions{
   display:flex;
   gap:10px;
-  margin-top:16px;
+  margin-top:14px;
 }
 
 .btn{
@@ -153,6 +177,7 @@ body{background:var(--bg);color:var(--text);}
   font-weight:800;
   color:#fff;
 }
+
 .btn-print{background:#22c55e}
 .btn-wa{background:#25D366}
 
@@ -167,7 +192,6 @@ footer{
 
 <body>
 
-<!-- 🧭 APP BAR -->
 <div class="app-bar">
   <div class="bar-top">
     <strong>🤖 AI Reçete</strong>
@@ -185,7 +209,7 @@ footer{
 
   <div class="banner">
     <h1>Yapay Zeka Reçete Analizi</h1>
-    <p>Mobil • ERP • Akıllı Üretim Analizi</p>
+    <p>Mobil • ERP • Akıllı Üretim</p>
   </div>
 
   <div class="search">
@@ -4420,10 +4444,10 @@ Hammadde Toplamı	5,264000
 const norm=s=>s.toLowerCase().replace(/ı/g,"i");
 
 function category(i){
- if(/^07/.test(i.code)) return ["🌿","ham"];
- if(/opp|bobin|rulo/i.test(i.name)) return ["🎞","bobin"];
- if(/koli|omk/i.test(i.name)) return ["📦","koli"];
- return ["🧩","yard"];
+ if(/^07/.test(i.code)) return ["🌿","ham","Hammadde"];
+ if(/opp|bobin|rulo/i.test(i.name)) return ["🎞","bobin","Bobin"];
+ if(/koli|omk/i.test(i.name)) return ["📦","koli","Koli"];
+ return ["🧩","yard","Yardımcı"];
 }
 
 function parseERP(text){
@@ -4438,7 +4462,8 @@ function parseERP(text){
    products.push(current);
   }else if(current && raw.startsWith(" ")){
    const c=raw.trim().split(/\t+/);
-   if(c.length>=3) current.items.push({code:c[0],name:c[1],qty:c[2]});
+   if(c.length>=3)
+    current.items.push({code:c[0],name:c[1],qty:c[2]});
   }
  }
  return products;
@@ -4461,11 +4486,14 @@ search.oninput=()=>{
    <div class="recipe">
     ${p.items.map(i=>{
       const [icon,cls]=category(i);
-      return `<div class="row ${cls}">
+      return `
+      <div class="row ${cls}">
         <div class="icon">${icon}</div>
-        <div class="col-muted">${i.code}</div>
-        <div>${i.name}</div>
-        <div>${i.qty}</div>
+        <div class="row-content">
+          <div class="code">${i.code}</div>
+          <div class="qty">${i.qty}</div>
+          <div class="name">${i.name}</div>
+        </div>
       </div>`;
     }).join("")}
     <div class="actions">
@@ -4483,8 +4511,10 @@ function shareWA(btn){
  let t=`🤖 *AI Reçete Analizi*\n\n`;
  t+=`🌿 Hammadde\n🎞 Bobin\n📦 Koli\n🧩 Yardımcı\n\n`;
  card.querySelectorAll(".row").forEach(r=>{
-  const d=r.querySelectorAll("div");
-  t+=`${d[0].innerText} ${d[2].innerText} | ${d[3].innerText}\n`;
+  const icon=r.querySelector(".icon").innerText;
+  const name=r.querySelector(".name").innerText;
+  const qty=r.querySelector(".qty").innerText;
+  t+=`${icon} ${name} — ${qty}\n`;
  });
  window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank");
 }
