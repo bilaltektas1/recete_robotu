@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stok & Reçete Yapay Zeka Asistanı</title>
+
+<style>
+:root{
+  --bg:#020617;
+  --panel:#020617ee;
+  --line:rgba(255,255,255,.12);
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --best:#22c55e;
+
+  --ham:#22c55e;
+  --amb:#38bdf8;
+  --koli:#f59e0b;
+  --yard:#a78bfa;
+}
+[data-theme="light"]{
+  --bg:#f8fafc;
+  --panel:#ffffff;
+  --line:#e5e7eb;
+  --text:#020617;
+  --muted:#475569;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,Segoe UI,Arial;
+  background:var(--bg);
+  color:var(--text);
+}
+.app{max-width:820px;margin:auto;padding:14px}
+
+/* BANNER */
+.banner{
+  border-radius:22px;
+  padding:20px;
+  background:linear-gradient(120deg,#0ea5e9,#22c55e,#6366f1);
+  background-size:300% 300%;
+  animation:grad 14s ease infinite;
+  color:#fff;
+}
+@keyframes grad{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+.banner h1{margin:0;font-size:22px}
+.banner span{font-size:13px;opacity:.9}
+
+/* TOP */
+.top{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:12px;
+}
+
+/* TOGGLE SWITCH */
+.theme-switch{
+  position:relative;
+  width:56px;
+  height:28px;
+}
+.theme-switch input{display:none}
+.theme-switch label{
+  width:100%;
+  height:100%;
+  background:#111;
+  border-radius:999px;
+  display:block;
+  cursor:pointer;
+  position:relative;
+  border:1px solid var(--line);
+}
+.theme-switch label::after{
+  content:"🌙";
+  width:22px;
+  height:22px;
+  background:#fff;
+  border-radius:50%;
+  position:absolute;
+  top:2px;
+  left:3px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  transition:.3s;
+}
+.theme-switch input:checked + label::after{
+  left:31px;
+  content:"☀️";
+}
+
+/* SEARCH */
+.search{
+  margin-top:14px;
+  position:relative;
+}
+.search input{
+  width:100%;
+  padding:16px 18px 16px 46px;
+  border-radius:18px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  color:var(--text);
+  font-size:16px;
+}
+.search::before{
+  content:"🔍";
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+/* CARD */
+.card{
+  margin-top:16px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:16px;
+  cursor:pointer;
+  transition:.3s;
+}
+.card.best{
+  border-color:var(--best);
+  box-shadow:0 0 28px #22c55e66;
+}
+.card-title{font-size:20px;font-weight:700}
+.card.best .card-title{color:var(--best)}
+.card-sub{font-size:13px;color:var(--muted)}
+
+/* RECIPE */
+.recipe{
+  margin-top:14px;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .45s ease;
+}
+.card.open .recipe{max-height:800px}
+
+/* TABLE */
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:8px;
+  font-size:13px;
+}
+.table th{
+  text-align:left;
+  padding:8px;
+  font-size:12px;
+  color:var(--muted);
+}
+.table td{
+  padding:10px 8px;
+  border-top:1px dashed var(--line);
+}
+.cat{font-weight:600}
+.qty{text-align:right;font-weight:700}
+
+.ham{color:var(--ham)}
+.amb{color:var(--amb)}
+.koli{color:var(--koli)}
+.yard{color:var(--yard)}
+
+.empty{
+  margin-top:40px;
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+}
+
+footer{
+  margin:40px 0 10px;
+  text-align:center;
+  font-size:11px;
+  color:var(--muted);
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<div class="banner">
+  <h1>Stok & Reçete Asistanı</h1>
+  <span>Akıllı arama • Reçete görüntüleme</span>
+</div>
+
+<div class="top">
+  <div class="theme-switch">
+    <input type="checkbox" id="themeToggle">
+    <label for="themeToggle"></label>
+  </div>
+</div>
+
+<div class="search">
+  <input id="search" placeholder="Stok kodu, stok ismi veya bileşen kodu yazın">
+</div>
+
+<div id="results"></div>
+
+<footer>© Bilal Tektaş</footer>
+
+<textarea id="DATA" hidden>
+04221941106	PUL BİBER EVLİK 5 KG ŞEFFAF
+HAMMADDE	0770	EVLİK PUL BİBER	5
+AMBALAJ	157600100016	RULO P.P. ŞEFFAF 490 MM	0.014
+KOLİ	157600200054	KOLİ OMMAR BASKISIZ	0.250
+</textarea>
+
+</div>
+
+<script>
+const norm=s=>s.toLowerCase().replace(/ı/g,"i");
+
+const raw=document.getElementById("DATA").value.trim().split("\n");
+const PRODUCT={
+  code:raw[0].split("\t")[0],
+  name:raw[0].split("\t")[1],
+  recipe:raw.slice(1).map(r=>{
+    const [c,code,name,q]=r.split("\t");
+    return {c,code,name,q:Number(q)};
+  })
+};
+
+const input=document.getElementById("search");
+const res=document.getElementById("results");
+
+input.oninput=()=>{
+  res.innerHTML="";
+  const q=input.value.trim();
+  if(!q){
+    res.innerHTML=`<div class="empty">Yazmaya başlayın</div>`;
+    return;
+  }
+
+  const hit =
+    norm(PRODUCT.code).includes(norm(q)) ||
+    norm(PRODUCT.name).includes(norm(q)) ||
+    PRODUCT.recipe.some(r=>norm(r.code).includes(norm(q)));
+
+  if(hit){
+    const exact = norm(PRODUCT.code)===norm(q) || norm(PRODUCT.name)===norm(q);
+
+    const card=document.createElement("div");
+    card.className="card"+(exact?" best":"");
+    card.innerHTML=`
+      <div class="card-title">${PRODUCT.code}</div>
+      <div class="card-sub">${PRODUCT.name}</div>
+      <div class="recipe">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Kategori</th>
+              <th>Stok Kodu</th>
+              <th>Stok İsmi</th>
+              <th>Miktar</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${PRODUCT.recipe.map(r=>`
+              <tr>
+                <td class="cat ${cls(r.c)}">${icon(r.c)} ${r.c}</td>
+                <td>${r.code}</td>
+                <td>${r.name}</td>
+                <td class="qty ${cls(r.c)}">${r.q.toFixed(4)}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+    card.onclick=()=>card.classList.toggle("open");
+    res.appendChild(card);
+  }
+};
+
+function cls(c){
+  return c==="HAMMADDE"?"ham":c==="AMBALAJ"?"amb":c==="KOLİ"?"koli":"yard";
+}
+function icon(c){
+  return c==="HAMMADDE"?"🟢":c==="AMBALAJ"?"📦":c==="KOLİ"?"🟡":"🧩";
+}
+
+document.getElementById("themeToggle").onchange=e=>{
+  document.body.dataset.theme=e.target.checked?"light":"";
+};
+</script>
+</body>
+</html>
