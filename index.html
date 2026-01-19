@@ -9,7 +9,8 @@
 :root{
   --bg:#020617;
   --panel:#020617ee;
-  --line:rgba(255,255,255,.14);
+  --panel-soft:#050b22;
+  --line:rgba(255,255,255,.15);
   --text:#e5e7eb;
   --muted:#9ca3af;
 
@@ -24,58 +25,35 @@
 body{
   margin:0;
   font-family:Inter,Segoe UI,Arial;
-  background:var(--bg);
+  background:radial-gradient(1200px 600px at 20% -10%,#0b1d3a,transparent),var(--bg);
   color:var(--text);
 }
 
 .app{max-width:980px;margin:auto;padding:16px}
 
-/* ===== ESKİ GÜZEL HAREKETLİ BANNER ===== */
+/* ===== BANNER ===== */
 .banner{
   position:relative;
-  overflow:hidden;
   border-radius:26px;
   padding:30px;
-  background:linear-gradient(120deg,#22c55e,#0ea5e9,#6366f1);
-  background-size:300% 300%;
-  animation:grad 14s ease infinite;
-  color:#fff;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(56,189,248,.25),transparent 40%),
+    radial-gradient(circle at 80% 30%,rgba(167,139,250,.25),transparent 45%),
+    linear-gradient(120deg,#020617,#020617,#030b2f);
+  overflow:hidden;
 }
-
 .banner::before,
 .banner::after{
   content:"";
   position:absolute;
-  border-radius:50%;
-  background:rgba(255,255,255,.18);
-  animation:pulse 8s ease-in-out infinite;
+  inset:-50%;
+  background:repeating-radial-gradient(circle,rgba(255,255,255,.08) 0 1px,transparent 1px 40px);
+  animation:stars 90s linear infinite;
 }
-
-.banner::before{
-  width:180px;height:180px;
-  top:-60px;left:-60px;
-}
-
-.banner::after{
-  width:260px;height:260px;
-  bottom:-100px;right:-100px;
-  animation-delay:3s;
-}
-
-@keyframes grad{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-
-@keyframes pulse{
-  0%{transform:scale(.6);opacity:.3}
-  50%{transform:scale(1.2);opacity:.15}
-  100%{transform:scale(.6);opacity:.3}
-}
-
+.banner::after{animation-duration:160s;opacity:.4}
+@keyframes stars{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .banner h1{margin:0 0 6px;font-size:26px}
-.banner span{font-size:14px;opacity:.9}
+.banner span{font-size:14px;color:#c7d2fe}
 
 /* ===== SEARCH ===== */
 .search{margin:18px 0}
@@ -92,78 +70,68 @@ body{
 /* ===== CARD ===== */
 .card{
   margin-top:12px;
-  background:var(--panel);
+  background:linear-gradient(180deg,var(--panel),var(--panel-soft));
   border:1px solid var(--line);
   border-radius:22px;
   padding:16px;
-  transition:.3s;
+  position:relative;
 }
-
-.card.active{
-  border-color:var(--ham);
-  box-shadow:0 0 0 2px rgba(34,197,94,.35);
-}
+.card.active{outline:2px solid var(--ham)}
 
 .card-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
+.card-code{font-weight:800;cursor:pointer}
 
-.card-code{
-  font-weight:800;
-  cursor:pointer;
-}
+.recipe{display:none;margin-top:14px}
+.card.open .recipe{display:block}
 
-.recipe{
-  max-height:0;
-  overflow:hidden;
-  transition:max-height .6s ease;
-}
-.card.open .recipe{max-height:3000px}
-
-/* ===== TABLO GÖRÜNÜMLÜ SATIRLAR ===== */
+/* ===== ROW ===== */
 .row{
   display:grid;
-  grid-template-columns:
-    40px        /* icon */
-    110px       /* kategori */
-    140px       /* stok kodu */
-    1fr         /* stok ismi */
-    90px;       /* miktar */
-
+  grid-template-columns:1.4fr 1fr 3fr 1fr;
   gap:10px;
-  padding:12px 0;
-  border-bottom:1px solid var(--line);
+  padding:14px 6px;
   font-size:13px;
-  align-items:center;
+  border-bottom:1px solid var(--line);
 }
 
-.row span{
-  white-space:normal;
-  word-break:break-word;
-}
-
-.icon{font-size:18px}
-
-.cat{
-  font-weight:700;
-}
-
-.code{color:#c7d2fe}
-.qty{
-  text-align:right;
-  font-weight:800;
-}
-
-/* RENKLER */
 .row.ham{color:var(--ham)}
 .row.bobin{color:var(--bobin)}
 .row.koli{color:var(--koli)}
 .row.yard{color:var(--yard)}
+.col-muted{color:var(--muted)}
+
+/* ===== MOBILE READABLE ===== */
+@media(max-width:600px){
+  .row{
+    grid-template-columns:1fr;
+    gap:6px;
+    padding:14px 10px;
+  }
+}
+
+/* ===== ACTIONS ===== */
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+.btn{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  font-weight:700;
+  color:#fff;
+}
+.btn-print{background:#22c55e}
+.btn-wa{background:#25D366}
 
 footer{
-  margin:36px 0 10px;
+  margin:34px 0 10px;
   text-align:center;
   font-size:11px;
   color:var(--muted);
@@ -176,7 +144,7 @@ footer{
 
 <div class="banner">
   <h1>Yapay Zeka & Reçete Analiz Robotu</h1>
-  <span>Akıllı Stok • Üretim • Mobil ERP</span>
+  <span>Akıllı Stok • Üretim • Mobil Analiz</span>
 </div>
 
 <div class="search">
@@ -4411,41 +4379,31 @@ Hammadde Toplamı	5,264000
 <script>
 const norm=s=>s.toLowerCase().replace(/ı/g,"i");
 
+function category(item){
+  if(/^07/.test(item.code)) return ["🌿 Hammadde","ham"];
+  if(/opp|bobin|rulo/i.test(item.name)) return ["🎞 Bobin","bobin"];
+  if(/koli|omk/i.test(item.name)) return ["📦 Koli","koli"];
+  return ["🧩 Yardımcı","yard"];
+}
+
 function parseERP(text){
-  const lines=text.split(/\r?\n/);
+  const lines=text.split("\n");
   const products=[];
   let current=null;
 
   for(const raw of lines){
     if(!raw.trim()) continue;
-
-    if(!raw.startsWith(" ") && raw.includes("\t1,")){
+    if(!raw.startsWith(" ") && /\t1,000000/.test(raw)){
       const [code,name]=raw.split("\t");
       current={code,name,items:[]};
       products.push(current);
-      continue;
     }
-
     if(current && raw.startsWith(" ")){
-      const p=raw.trim().split("\t");
-      if(p.length>=3){
-        current.items.push({code:p[0],name:p[1],qty:p[2]});
-      }
+      const c=raw.trim().split("\t");
+      current.items.push({code:c[0],name:c[1],qty:c[2]});
     }
   }
   return products;
-}
-
-function category(i){
-  if(/^07/.test(i.code)) return ["🌿","HAMMADDE","ham"];
-  if(/opp|bobin|rulo/i.test(i.name)) return ["🎞️","BOBİN","bobin"];
-  if(/koli|omk/i.test(i.name)) return ["📦","KOLİ","koli"];
-  if(/etiket/i.test(i.name)) return ["🏷️","ETİKET","yard"];
-  if(/seperat/i.test(i.name)) return ["📐","SEPERATÖR","yard"];
-  if(/köşebent/i.test(i.name)) return ["🧱","KÖŞEBENT","yard"];
-  if(/palet/i.test(i.name)) return ["🪵","PALET","yard"];
-  if(/streç/i.test(i.name)) return ["🎞️","STREÇ","yard"];
-  return ["🧩","YARDIMCI","yard"];
 }
 
 const DATA=parseERP(RAW_DATA.value);
@@ -4472,30 +4430,46 @@ search.oninput=()=>{
 
       <div class="recipe">
         ${p.items.map(i=>{
-          const [icon,label,cls]=category(i);
+          const [label,cls]=category(i);
           return`
           <div class="row ${cls}">
-            <span class="icon">${icon}</span>
-            <span class="cat">${label}</span>
-            <span class="code">${i.code}</span>
-            <span>${i.name}</span>
-            <span class="qty">${i.qty}</span>
+            <div>${label}</div>
+            <div class="col-muted">${i.code}</div>
+            <div>${i.name}</div>
+            <div>${i.qty}</div>
           </div>`;
         }).join("")}
+
+        <div class="actions">
+          <button class="btn btn-print" onclick="event.stopPropagation();window.print()">🖨 Yazdır</button>
+          <button class="btn btn-wa" onclick="event.stopPropagation();shareWA(this)">WhatsApp</button>
+        </div>
       </div>
     `;
 
+    card.querySelector(".card-code").onclick=(e)=>{
+      e.stopPropagation();
+      card.classList.toggle("open");
+    };
+
     card.onclick=()=>{
+      card.classList.add("active","open");
       activeRecipe.innerHTML="";
       activeRecipe.appendChild(card);
-      card.classList.toggle("open");
-      card.classList.add("active");
       activeRecipe.scrollIntoView({behavior:"smooth",block:"start"});
     };
 
     results.appendChild(card);
   });
 };
+
+function shareWA(btn){
+  const card=btn.closest(".card");
+  let text="🤖 Yapay Zeka & Reçete Analiz Robotu\n\n";
+  card.querySelectorAll(".row").forEach(r=>text+=r.innerText+"\n");
+  text+="\n© Bilal Tektaş";
+  window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank");
+}
 </script>
 </body>
 </html>
