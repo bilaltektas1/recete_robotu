@@ -2,97 +2,97 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Yapay Zeka & Reçete Analiz Robotu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>AI Reçete Analiz</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --bg:#f5f5f5;
+  --bg:#f4f6f8;
   --panel:#ffffff;
-  --panel-soft:#f0f0f0;
+  --soft:#f1f5f9;
   --line:rgba(0,0,0,.08);
-  --text:#111827;
-  --muted:#6b7280;
+  --text:#0f172a;
+  --muted:#64748b;
 
   --ham:#22c55e;
   --bobin:#38bdf8;
   --koli:#f59e0b;
   --yard:#a78bfa;
-
-  --transition:.3s ease;
 }
 
 body.dark{
   --bg:#020617;
   --panel:#020617ee;
-  --panel-soft:#050b22;
-  --line:rgba(255,255,255,.15);
+  --soft:#050b22;
+  --line:rgba(255,255,255,.12);
   --text:#e5e7eb;
-  --muted:#9ca3af;
+  --muted:#94a3b8;
 }
 
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Inter,Segoe UI,Arial;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Segoe UI,Arial;}
+body{background:var(--bg);color:var(--text);}
 
-body{
-  background:var(--bg);
-  color:var(--text);
-  transition:background var(--transition), color var(--transition);
-}
-
-/* 🔒 SABİT TEMA BUTONU */
-.theme-toggle{
+/* 🧭 APP BAR */
+.app-bar{
   position:fixed;
-  top:12px;
-  right:12px;
-  z-index:2000;
+  top:0;
+  left:0;
+  right:0;
+  z-index:5000;
   background:var(--panel);
-  border:1px solid var(--line);
-  padding:8px 12px;
-  border-radius:14px;
-  font-weight:700;
-  cursor:pointer;
-  box-shadow:0 6px 14px rgba(0,0,0,.15);
+  border-bottom:1px solid var(--line);
+  padding:12px 14px env(safe-area-inset-top);
 }
 
-/* ÜSTTEN BOŞLUK (tema butonu yazıyı kapatmasın) */
+.bar-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.theme-toggle{
+  font-weight:700;
+  padding:6px 12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  background:var(--soft);
+}
+
+/* LEGEND */
+.legend{
+  display:flex;
+  gap:12px;
+  margin-top:8px;
+  font-size:13px;
+  font-weight:600;
+  flex-wrap:wrap;
+}
+.legend span{white-space:nowrap}
+.ham{color:var(--ham)}
+.bobin{color:var(--bobin)}
+.koli{color:var(--koli)}
+.yard{color:var(--yard)}
+
+/* APP */
 .app{
   max-width:980px;
   margin:auto;
-  padding:72px 14px 16px;
+  padding:140px 14px 20px;
 }
 
-/* BANNER */
+/* 🔥 BANNER */
 .banner{
   border-radius:26px;
-  padding:26px;
-  background:linear-gradient(270deg,#22c55e,#38bdf8,#f59e0b,#a78bfa);
-  background-size:800% 800%;
-  animation:grad 20s ease infinite;
+  padding:28px;
+  background:linear-gradient(135deg,#22c55e,#38bdf8,#a78bfa);
   color:#fff;
-  margin-bottom:16px;
+  margin-bottom:18px;
 }
-
-.banner h1{
-  font-size:24px;
-  margin-bottom:6px;
-}
-
-.banner span{
-  font-size:14px;
-}
-
-@keyframes grad{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
+.banner h1{font-size:24px;margin-bottom:6px}
+.banner p{font-size:14px;opacity:.9}
 
 /* SEARCH */
 .search input{
@@ -101,54 +101,32 @@ body{
   border-radius:18px;
   border:1px solid var(--line);
   background:var(--panel);
-  color:var(--text);
   font-size:15px;
 }
 
 /* CARD */
 .card{
-  margin-top:14px;
-  background:linear-gradient(180deg,var(--panel),var(--panel-soft));
+  margin-top:16px;
+  background:var(--panel);
   border:1px solid var(--line);
   border-radius:22px;
   padding:14px;
-  cursor:pointer;
-  transition:.25s;
-}
-
-.card:hover{
-  transform:scale(1.015);
-  box-shadow:0 12px 24px rgba(0,0,0,.15);
-}
-
-.card.active{
-  outline:2px solid var(--ham);
 }
 
 .card-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
-}
-
-.card-code{
   font-weight:800;
-  font-size:16px;
 }
 
-.recipe{
-  display:none;
-  margin-top:14px;
-}
+.recipe{display:none;margin-top:12px;}
+.card.open .recipe{display:block}
 
-.card.open .recipe{
-  display:block;
-}
-
-/* TABLO SATIR */
+/* ROW */
 .row{
   display:grid;
-  grid-template-columns:1.1fr 1fr 2.8fr 1fr;
+  grid-template-columns:34px 1fr 2.4fr 1fr;
   gap:8px;
   padding:8px 4px;
   border-bottom:1px solid var(--line);
@@ -156,22 +134,11 @@ body{
   align-items:center;
   white-space:nowrap;
   overflow:hidden;
-  text-overflow:ellipsis;
 }
 
-.row div:first-child{
-  font-size:15px;
-  font-weight:600;
-}
+.icon{text-align:center;font-size:18px;}
+.col-muted{color:var(--muted)}
 
-.row.ham{color:var(--ham);}
-.row.bobin{color:var(--bobin);}
-.row.koli{color:var(--koli);}
-.row.yard{color:var(--yard);}
-
-.col-muted{color:var(--muted);}
-
-/* BUTONLAR */
 .actions{
   display:flex;
   gap:10px;
@@ -185,48 +152,46 @@ body{
   border-radius:16px;
   font-weight:800;
   color:#fff;
-  cursor:pointer;
 }
-
-.btn-print{background:#22c55e;}
-.btn-wa{background:#25D366;}
+.btn-print{background:#22c55e}
+.btn-wa{background:#25D366}
 
 footer{
-  margin:30px 0 10px;
   text-align:center;
+  margin-top:30px;
   font-size:11px;
   color:var(--muted);
-}
-
-/* 📱 ULTRA MOBİL */
-@media(max-width:600px){
-  .row{
-    grid-template-columns:1.2fr 1fr 2.2fr 1fr;
-    font-size:12px;
-  }
-  .row div:first-child{
-    font-size:14px;
-  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="theme-toggle" onclick="toggleTheme()">🌙 Tema</div>
+<!-- 🧭 APP BAR -->
+<div class="app-bar">
+  <div class="bar-top">
+    <strong>🤖 AI Reçete</strong>
+    <div class="theme-toggle" onclick="toggleTheme()">🌙 Tema</div>
+  </div>
+  <div class="legend">
+    <span class="ham">🌿 Hammadde</span>
+    <span class="bobin">🎞 Bobin</span>
+    <span class="koli">📦 Koli</span>
+    <span class="yard">🧩 Yardımcı</span>
+  </div>
+</div>
 
 <div class="app">
 
   <div class="banner">
-    <h1>Yapay Zeka & Reçete Analiz Robotu</h1>
-    <span>Akıllı Stok • Üretim • Mobil Analiz</span>
+    <h1>Yapay Zeka Reçete Analizi</h1>
+    <p>Mobil • ERP • Akıllı Üretim Analizi</p>
   </div>
 
   <div class="search">
     <input id="search" placeholder="Stok kodu veya ürün adı yaz">
   </div>
 
-  <div id="activeRecipe"></div>
   <div id="results"></div>
 
   <footer>© Bilal Tektaş</footer>
@@ -4454,98 +4419,80 @@ Hammadde Toplamı	5,264000
 <script>
 const norm=s=>s.toLowerCase().replace(/ı/g,"i");
 
-const CATEGORY_RULES=[
- {label:"🌿 Hammadde",cls:"ham",test:i=>/^07/.test(i.code)},
- {label:"🎞 Bobin",cls:"bobin",test:i=>/opp|bobin|rulo/i.test(i.name)},
- {label:"📦 Koli",cls:"koli",test:i=>/koli|omk/i.test(i.name)}
-];
-
 function category(i){
- for(const r of CATEGORY_RULES) if(r.test(i)) return [r.label,r.cls];
- return ["🧩 Yardımcı","yard"];
+ if(/^07/.test(i.code)) return ["🌿","ham"];
+ if(/opp|bobin|rulo/i.test(i.name)) return ["🎞","bobin"];
+ if(/koli|omk/i.test(i.name)) return ["📦","koli"];
+ return ["🧩","yard"];
 }
 
 function parseERP(text){
  const lines=text.split("\n");
  const products=[];
  let current=null;
-
  for(const raw of lines){
   if(!raw.trim()) continue;
-
   if(!raw.startsWith(" ") && /\t1,000000/.test(raw)){
-    const p=raw.split(/\t+/);
-    current={code:p[0],name:p[1],items:[]};
-    products.push(current);
-  }
-  else if(current && raw.startsWith(" ")){
-    const c=raw.trim().split(/\t+/);
-    if(c.length>=3) current.items.push({code:c[0],name:c[1],qty:c[2]});
+   const p=raw.split(/\t+/);
+   current={code:p[0],name:p[1],items:[]};
+   products.push(current);
+  }else if(current && raw.startsWith(" ")){
+   const c=raw.trim().split(/\t+/);
+   if(c.length>=3) current.items.push({code:c[0],name:c[1],qty:c[2]});
   }
  }
  return products;
 }
 
-const DATA=parseERP(document.getElementById("RAW_DATA").value);
+const DATA=parseERP(RAW_DATA.value);
 const results=document.getElementById("results");
 
 search.oninput=()=>{
  results.innerHTML="";
  const q=norm(search.value);
  if(!q) return;
-
- DATA.filter(p=>
-   norm(p.code).includes(q) ||
-   norm(p.name).includes(q) ||
-   p.items.some(i=>norm(i.name).includes(q))
- ).forEach(p=>{
+ DATA.filter(p=>norm(p.code).includes(q)||norm(p.name).includes(q))
+ .forEach(p=>{
   const card=document.createElement("div");
   card.className="card";
   card.innerHTML=`
-   <div class="card-head">
-     <div class="card-code">${p.code}</div><span>⌄</span>
-   </div>
+   <div class="card-head">${p.code}<span>⌄</span></div>
    <small>${p.name}</small>
    <div class="recipe">
-     ${p.items.map(i=>{
-       const [l,c]=category(i);
-       return `<div class="row ${c}">
-         <div>${l}</div>
-         <div class="col-muted">${i.code}</div>
-         <div>${i.name}</div>
-         <div>${i.qty}</div>
-       </div>`;
-     }).join("")}
-     <div class="actions">
-       <button class="btn btn-print" onclick="event.stopPropagation();printRecipe(this)">🖨 Yazdır</button>
-       <button class="btn btn-wa" onclick="event.stopPropagation();shareWA(this)">WhatsApp</button>
-     </div>
-   </div>
-  `;
-  card.onclick=()=>{
-   document.querySelectorAll(".card").forEach(c=>c.classList.remove("open","active"));
-   card.classList.add("open","active");
-  };
+    ${p.items.map(i=>{
+      const [icon,cls]=category(i);
+      return `<div class="row ${cls}">
+        <div class="icon">${icon}</div>
+        <div class="col-muted">${i.code}</div>
+        <div>${i.name}</div>
+        <div>${i.qty}</div>
+      </div>`;
+    }).join("")}
+    <div class="actions">
+      <button class="btn btn-print" onclick="event.stopPropagation();printRecipe(this)">🖨 Yazdır</button>
+      <button class="btn btn-wa" onclick="event.stopPropagation();shareWA(this)">WhatsApp</button>
+    </div>
+   </div>`;
+  card.onclick=()=>card.classList.toggle("open");
   results.appendChild(card);
  });
 };
 
 function shareWA(btn){
  const card=btn.closest(".card");
- let t=`🤖 *Yapay Zeka & Reçete Analiz Robotu*\n📦 *${card.querySelector("small").innerText}*\n\n`;
+ let t=`🤖 *AI Reçete Analizi*\n\n`;
+ t+=`🌿 Hammadde\n🎞 Bobin\n📦 Koli\n🧩 Yardımcı\n\n`;
  card.querySelectorAll(".row").forEach(r=>{
   const d=r.querySelectorAll("div");
-  t+=`${d[0].innerText}\n🔹 ${d[1].innerText}\n🔸 ${d[2].innerText}\n⚖️ ${d[3].innerText}\n——————————\n`;
+  t+=`${d[0].innerText} ${d[2].innerText} | ${d[3].innerText}\n`;
  });
  window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank");
 }
 
 function printRecipe(btn){
- const card=btn.closest(".card");
  const w=window.open('');
- w.document.write('<html><body style="font-family:Inter;padding:20px">');
- w.document.write('<h2>'+card.querySelector("small").innerText+'</h2>');
- card.querySelectorAll(".row").forEach(r=>w.document.write(r.outerHTML));
+ w.document.write('<html><body>');
+ w.document.write(btn.closest(".card").innerHTML);
  w.document.write('</body></html>');
  w.print();
 }
@@ -4559,4 +4506,3 @@ function toggleTheme(){
 
 </body>
 </html>
-
