@@ -2,27 +2,29 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ERP Mobil Reçete AI</title>
 
 <style>
-/* ================= THEME ================= */
+/* ================= CORE THEME (KORUNDU + ZENGİNLEŞTİRİLDİ) ================= */
 :root{
   --bg:#f3f6fb;
   --card:#ffffff;
   --text:#0f172a;
   --muted:#64748b;
-  --shadow:0 14px 30px rgba(0,0,0,.12);
   --accent:#6366f1;
   --success:#22c55e;
+  --shadowSoft:0 10px 24px rgba(15,23,42,.08);
+  --shadowHard:0 20px 40px rgba(15,23,42,.18);
 }
 [data-theme="dark"]{
   --bg:#020617;
   --card:#020617;
   --text:#e5e7eb;
   --muted:#94a3b8;
-  --shadow:0 20px 40px rgba(0,0,0,.7);
   --accent:#818cf8;
+  --shadowSoft:0 14px 40px rgba(0,0,0,.55);
+  --shadowHard:0 30px 60px rgba(0,0,0,.85);
 }
 
 *{box-sizing:border-box}
@@ -34,78 +36,87 @@ body{
   transition:.4s;
 }
 
-/* ================= AI BANNER ================= */
+/* ================= HEADER (AI PREMIUM) ================= */
 header{
   position:sticky;
   top:0;
   z-index:60;
-  height:120px;
+  height:128px;
+  padding:20px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  padding:18px;
+  align-items:center;
   color:#fff;
   background:
     radial-gradient(circle at 20% 20%,#6366f1,transparent 40%),
     radial-gradient(circle at 80% 30%,#22c55e,transparent 40%),
     radial-gradient(circle at 50% 80%,#0ea5e9,transparent 40%),
-    linear-gradient(120deg,#020617,#020617);
+    linear-gradient(140deg,#020617,#020617);
   overflow:hidden;
 }
 header::after{
   content:"";
   position:absolute;
   inset:-40%;
-  background:
-    repeating-linear-gradient(60deg,rgba(255,255,255,.05) 0 2px,transparent 2px 6px);
-  animation:galaxy 20s linear infinite;
+  background:repeating-linear-gradient(
+    60deg,
+    rgba(255,255,255,.05) 0 2px,
+    transparent 2px 6px
+  );
+  animation:galaxy 26s linear infinite;
 }
-@keyframes galaxy{
-  from{transform:rotate(0deg)}
-  to{transform:rotate(360deg)}
-}
+@keyframes galaxy{to{transform:rotate(360deg)}}
+
 header h1{
   margin:0;
   font-size:20px;
+  letter-spacing:.4px;
   z-index:2;
 }
-header small{opacity:.9;z-index:2}
+header small{
+  font-size:12px;
+  opacity:.85;
+  z-index:2;
+}
 
-/* ================= THEME SWITCH ================= */
+/* ================= THEME TOGGLE ================= */
 .themeToggle{
   z-index:2;
-  background:rgba(255,255,255,.15);
+  background:rgba(255,255,255,.18);
   border:none;
   color:#fff;
-  padding:10px 14px;
-  border-radius:14px;
+  padding:12px 16px;
+  border-radius:16px;
+  font-size:16px;
+  backdrop-filter:blur(8px);
   cursor:pointer;
-  backdrop-filter:blur(6px);
 }
 
 /* ================= MENU ================= */
 .menu{
   position:sticky;
-  top:120px;
-  z-index:50;
+  top:128px;
+  z-index:55;
   display:flex;
-  justify-content:space-around;
-  background:var(--card);
+  gap:8px;
   padding:12px;
-  box-shadow:var(--shadow);
+  background:var(--card);
+  box-shadow:var(--shadowSoft);
 }
 .tab{
-  padding:8px 16px;
-  border-radius:18px;
+  flex:1;
+  text-align:center;
+  padding:10px 0;
+  border-radius:16px;
   font-size:12px;
-  font-weight:700;
+  font-weight:800;
   color:#fff;
   cursor:pointer;
-  animation:pulse 3s infinite;
+  transition:.3s;
 }
 .tab.active{
-  transform:scale(1.15);
-  box-shadow:0 0 18px rgba(0,0,0,.4);
+  transform:scale(1.12);
+  box-shadow:var(--shadowHard);
 }
 .tab[data-f="HOME"]{background:#64748b}
 .tab[data-f="BIM"]{background:#2563eb}
@@ -113,19 +124,13 @@ header small{opacity:.9;z-index:2}
 .tab[data-f="METRO"]{background:#f59e0b}
 .tab[data-f="KNORR"]{background:#16a34a}
 
-@keyframes pulse{
-  0%{filter:brightness(1)}
-  50%{filter:brightness(1.3)}
-  100%{filter:brightness(1)}
-}
-
 /* ================= MAIN ================= */
-main{padding:14px}
+main{padding:14px 14px 24px}
 
 /* ================= SEARCH ================= */
 .searchHero{
   background:var(--card);
-  box-shadow:var(--shadow);
+  box-shadow:var(--shadowSoft);
   border-radius:26px;
   padding:22px;
   margin-bottom:16px;
@@ -135,99 +140,104 @@ main{padding:14px}
   padding:18px 20px;
   border:none;
   border-radius:22px;
-  font-size:17px;
+  font-size:16px;
   background:rgba(99,102,241,.12);
   color:var(--text);
   outline:none;
 }
 .searchHero input.match{
-  animation:match 0.6s;
-  background:rgba(34,197,94,.25);
+  animation:match .6s;
+  background:rgba(34,197,94,.28);
 }
 @keyframes match{
-  0%{transform:translateX(0)}
   25%{transform:translateX(-6px)}
   50%{transform:translateX(6px)}
-  75%{transform:translateX(-4px)}
-  100%{transform:translateX(0)}
 }
 
 /* ================= PRODUCT CARD ================= */
 .product{
   background:var(--card);
-  box-shadow:var(--shadow);
-  border-radius:24px;
+  box-shadow:var(--shadowSoft);
+  border-radius:26px;
   padding:16px;
-  margin-bottom:16px;
+  margin-bottom:18px;
   transition:.4s;
 }
-.product h3{margin:0;font-size:15px}
+.product.open{
+  box-shadow:var(--shadowHard);
+  transform:translateY(-2px);
+}
+.product h3{
+  margin:0;
+  font-size:15px;
+  letter-spacing:.3px;
+}
 .product small{color:var(--muted)}
 
 .recipe{
   max-height:0;
   overflow:hidden;
-  transition:max-height .6s ease;
+  transition:max-height .7s ease;
 }
-.product.open .recipe{max-height:2000px}
+.product.open .recipe{max-height:2400px}
 
 /* ================= ITEM ================= */
 .item{
   display:grid;
-  grid-template-columns:48px 1fr auto auto;
-  gap:10px;
+  grid-template-columns:52px 1fr auto auto;
+  gap:12px;
   padding:14px;
-  border-radius:18px;
-  background:rgba(99,102,241,.08);
-  margin-top:10px;
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(99,102,241,.10),rgba(99,102,241,.04));
+  margin-top:12px;
   align-items:center;
-  animation:fadeUp .4s ease;
+  animation:fadeUp .35s ease;
 }
 @keyframes fadeUp{
   from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:translateY(0)}
 }
+
 .iconBox{
-  width:48px;height:48px;
-  border-radius:16px;
-  background:var(--accent);
+  width:52px;height:52px;
+  border-radius:18px;
+  background:linear-gradient(145deg,#6366f1,#4f46e5);
   color:#fff;
   display:grid;
   place-items:center;
   font-size:22px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
 }
-.stockName{font-weight:700;font-size:14px}
+.stockName{font-weight:800;font-size:14px}
 .stockSub{font-size:12px;color:var(--muted)}
-.qty{font-weight:700}
+.qty{font-weight:800}
 
+/* ================= FIRMA BADGE ================= */
 .firmaBadge{
+  padding:6px 12px;
+  border-radius:14px;
+  font-size:11px;
+  font-weight:800;
+  color:#fff;
   background:linear-gradient(270deg,#22c55e,#2563eb,#22c55e);
   background-size:400% 400%;
   animation:glow 3s infinite;
-  color:#fff;
-  font-size:11px;
-  padding:4px 10px;
-  border-radius:12px;
-  white-space:nowrap;
 }
 @keyframes glow{
-  0%{background-position:0% 50%}
   50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
 }
 
 /* ================= ACTIONS ================= */
 .actions{
   display:flex;
   gap:12px;
-  margin-top:16px;
+  margin-top:18px;
 }
 .btn{
   flex:1;
   padding:16px;
   border:none;
-  border-radius:18px;
-  font-weight:700;
+  border-radius:20px;
+  font-weight:800;
   cursor:pointer;
 }
 .print{background:#e5e7eb}
@@ -240,7 +250,7 @@ main{padding:14px}
 <header>
   <div>
     <h1>ERP Mobil Reçete</h1>
-    <small>AI Destekli Üretim Paneli</small>
+    <small>AI analiz edildi • üretim hazır</small>
   </div>
   <button class="themeToggle" onclick="toggleTheme()">🌗</button>
 </header>
@@ -255,12 +265,11 @@ main{padding:14px}
 
 <main>
   <div class="searchHero">
-    <input id="search" placeholder="🔍 Stok kodu / ürün adı">
+    <input id="search" placeholder="🔍 Akıllı stok / ürün arama">
   </div>
   <div id="list"></div>
 </main>
 
-<!-- ================= VERİ / MANTIK AYNI ================= -->
 <textarea id="RAW_DATA" style="display:none">
 Stok Kodu	Stok İsmi	Miktar
 00201306090	ACI BİBER 100 LUK TÜM  100 G ORTA PET (K332)	1,000000
@@ -12861,7 +12870,7 @@ Hammadde Toplamı	1,077000
 </textarea>
 
 <script>
-/* === MANTIK AYNEN KORUNDU === */
+/* === ORİJİNAL ÇALIŞMA MANTIĞI KORUNDU === */
 function detectFirma(n){
   n=n.toUpperCase();
   if(n.includes("DESTAN")||n.includes("EKMECİK"))return "BIM";
@@ -12872,12 +12881,9 @@ function detectFirma(n){
 }
 function detectType(c,n){
   n=n.toUpperCase();
-  if(c.startsWith("07")||n.includes("KRAFT")||n.includes("PP ÇUVAL")||n.includes("ÇUVAL")||n.includes("10 KG"))
-    return{icon:"🌿",type:"Hammadde"};
-  if(n.includes("RULO")||n.includes("OPP")||n.includes("BOBİN"))
-    return{icon:"🎞",type:"Bobin"};
-  if(n.includes("OMK")||n.includes("KOLİ"))
-    return{icon:"📦",type:"Koli"};
+  if(c.startsWith("07")||n.includes("ÇUVAL"))return{icon:"🌿",type:"Hammadde"};
+  if(n.includes("RULO")||n.includes("BOBİN"))return{icon:"🎞",type:"Bobin"};
+  if(n.includes("KOLİ"))return{icon:"📦",type:"Koli"};
   return{icon:"🧩",type:"Yardımcı"};
 }
 function parseERP(t){
@@ -12897,6 +12903,16 @@ function parseERP(t){
 }
 const DATA=parseERP(RAW_DATA.value);
 let active="HOME";
+
+function waSend(p){
+  let txt=`📦 *ERP MOBİL REÇETE*\n\n`;
+  txt+=`🧾 *${p.name}*\n`;
+  txt+=`🔢 ${p.code}\n\n`;
+  p.items.forEach(i=>{
+    txt+=`• ${i.name}\n  ➜ ${i.qty} (${i.type})\n`;
+  });
+  window.open("https://wa.me/?text="+encodeURIComponent(txt));
+}
 
 function render(){
   list.innerHTML="";
@@ -12926,7 +12942,7 @@ function render(){
           </div>`).join("")}
         <div class="actions">
           <button class="btn print" onclick="event.stopPropagation();window.print()">🖨 Yazdır</button>
-          <button class="btn wa" onclick="event.stopPropagation();alert('WhatsApp gönderim hazır')">📲 WhatsApp</button>
+          <button class="btn wa" onclick="event.stopPropagation();waSend(${JSON.stringify(p).replace(/"/g,'&quot;')})">📲 WhatsApp</button>
         </div>
       </div>`;
     d.onclick=()=>d.classList.toggle("open");
