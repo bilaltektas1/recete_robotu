@@ -2,205 +2,243 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ERP Mobil Reçete AI</title>
 
 <style>
-/* === TASARIM %100 KORUNDU === */
+/* ================= THEME ================= */
 :root{
   --bg:#f3f6fb;
   --card:#ffffff;
   --text:#0f172a;
   --muted:#64748b;
+  --shadow:0 14px 30px rgba(0,0,0,.12);
   --accent:#6366f1;
-  --shadowSoft:0 10px 24px rgba(15,23,42,.08);
-  --shadowHard:0 20px 40px rgba(15,23,42,.18);
 }
 [data-theme="dark"]{
   --bg:#020617;
   --card:#020617;
   --text:#e5e7eb;
   --muted:#94a3b8;
-  --accent:#818cf8;
+  --shadow:0 20px 40px rgba(0,0,0,.7);
 }
+
 *{box-sizing:border-box}
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto;
   background:var(--bg);
   color:var(--text);
-  transition:.4s;
+  transition:.5s;
 }
 
-/* HEADER */
+/* ================= AI BANNER ================= */
 header{
   position:sticky;
   top:0;
   z-index:60;
-  height:128px;
-  padding:20px;
+  height:130px;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
+  padding:20px;
   color:#fff;
   background:
-    radial-gradient(circle at 20% 20%,#6366f1,transparent 40%),
-    radial-gradient(circle at 80% 30%,#22c55e,transparent 40%),
-    linear-gradient(140deg,#020617,#020617);
+    radial-gradient(circle at 20% 20%,#6366f1,transparent 45%),
+    radial-gradient(circle at 80% 30%,#22c55e,transparent 45%),
+    radial-gradient(circle at 50% 80%,#0ea5e9,transparent 45%),
+    linear-gradient(120deg,#020617,#020617);
+  overflow:hidden;
 }
-header h1{margin:0;font-size:20px}
-header small{font-size:12px;opacity:.85}
+header::before{
+  content:"";
+  position:absolute;
+  inset:-50%;
+  background:
+    repeating-linear-gradient(
+      60deg,
+      rgba(255,255,255,.06) 0 2px,
+      transparent 2px 6px
+    );
+  animation:galaxy 26s linear infinite;
+}
+@keyframes galaxy{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+header h1{
+  margin:0;
+  font-size:21px;
+  z-index:2;
+}
+header small{
+  opacity:.9;
+  z-index:2;
+}
+
 .themeToggle{
-  background:rgba(255,255,255,.2);
+  z-index:2;
+  background:rgba(255,255,255,.18);
   border:none;
   color:#fff;
   padding:12px 16px;
   border-radius:16px;
   cursor:pointer;
+  backdrop-filter:blur(8px);
 }
 
-/* MENU */
+/* ================= MENU ================= */
 .menu{
   position:sticky;
-  top:128px;
-  z-index:55;
+  top:130px;
+  z-index:50;
   display:flex;
-  gap:8px;
-  padding:12px;
+  justify-content:space-around;
   background:var(--card);
-  box-shadow:var(--shadowSoft);
+  padding:12px;
+  box-shadow:var(--shadow);
 }
 .tab{
-  flex:1;
-  text-align:center;
-  padding:10px 0;
-  border-radius:16px;
-  font-size:11px;
+  padding:8px 16px;
+  border-radius:18px;
+  font-size:12px;
   font-weight:800;
   color:#fff;
   cursor:pointer;
   transition:.3s;
 }
 .tab.active{
-  transform:scale(1.12);
-  box-shadow:var(--shadowHard);
+  transform:scale(1.18);
+  box-shadow:0 0 20px rgba(0,0,0,.35);
 }
 .tab[data-f="HOME"]{background:#64748b}
 .tab[data-f="BIM"]{background:#2563eb}
 .tab[data-f="FILE"]{background:#dc2626}
 .tab[data-f="METRO"]{background:#f59e0b}
 .tab[data-f="KNORR"]{background:#16a34a}
-.tab[data-f="ELLE DOLUM"]{background:#6b7280}
+.tab[data-f="ELLE DOLUM"]{background:#7c3aed}
 
-/* MAIN */
+/* ================= MAIN ================= */
 main{padding:14px}
+
+/* ================= SEARCH ================= */
 .searchHero{
   background:var(--card);
-  box-shadow:var(--shadowSoft);
-  border-radius:26px;
+  box-shadow:var(--shadow);
+  border-radius:28px;
   padding:22px;
   margin-bottom:16px;
 }
 .searchHero input{
   width:100%;
-  padding:18px;
+  padding:18px 22px;
   border:none;
   border-radius:22px;
-  background:rgba(99,102,241,.12);
+  font-size:17px;
+  background:rgba(99,102,241,.14);
   outline:none;
 }
-.searchHero input.match{animation:shake .5s}
-@keyframes shake{
-  20%{transform:translateX(-4px)}
-  40%{transform:translateX(4px)}
-  60%{transform:translateX(-3px)}
-}
 
-/* PRODUCT */
+/* ================= PRODUCT ================= */
 .product{
   background:var(--card);
-  box-shadow:var(--shadowSoft);
+  box-shadow:var(--shadow);
   border-radius:26px;
-  padding:16px;
-  margin-bottom:18px;
-  transition:.4s;
+  padding:18px;
+  margin-bottom:16px;
+  cursor:pointer;
+  transition:.45s cubic-bezier(.2,.8,.2,1);
 }
-.product.open{
-  box-shadow:var(--shadowHard);
-  animation:shake .35s;
-}
+.product:active{transform:scale(.98)}
 .productHeader{
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
-.product h3{margin:0;font-size:15px}
-.product small{color:var(--muted)}
-
+.arrow{
+  font-size:20px;
+  transition:.45s;
+}
+.product.open .arrow{transform:rotate(180deg)}
 .recipe{
   max-height:0;
   overflow:hidden;
   transition:max-height .7s ease;
 }
-.product.open .recipe{max-height:2400px}
+.product.open .recipe{
+  max-height:4000px;
+  animation:shake .35s;
+}
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  50%{transform:translateX(4px)}
+  75%{transform:translateX(-2px)}
+  100%{transform:translateX(0)}
+}
 
-/* ITEM */
+/* ================= ITEM ================= */
 .item{
   display:grid;
-  grid-template-columns:52px 1fr auto auto;
-  gap:12px;
+  grid-template-columns:48px 1fr auto auto;
+  gap:10px;
   padding:14px;
   border-radius:20px;
   background:rgba(99,102,241,.08);
-  margin-top:12px;
+  margin-top:10px;
+  align-items:center;
+  animation:fadeUp .4s ease;
 }
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(12px)}
+}
+
 .iconBox{
-  width:52px;height:52px;
-  border-radius:18px;
-  background:var(--accent);
-  color:#fff;
+  width:48px;height:48px;
+  border-radius:16px;
   display:grid;
   place-items:center;
   font-size:22px;
+  color:#fff;
 }
+.icon-hammadde{background:#16a34a}
+.icon-bobin{background:#2563eb}
+.icon-koli{background:#f59e0b}
+.icon-etiket{background:#ec4899}
+.icon-sise{background:#0ea5e9}
+.icon-yardimci{background:#64748b}
+
 .stockName{font-weight:800;font-size:14px}
 .stockSub{font-size:12px;color:var(--muted)}
-.qty{font-weight:800}
-
-/* BADGE */
-.firmaBadge{
-  padding:6px 12px;
-  border-radius:14px;
-  font-size:11px;
+.qty{
   font-weight:800;
-  color:#fff;
-  background:linear-gradient(270deg,#22c55e,#2563eb);
+  background:rgba(0,0,0,.12);
+  padding:6px 10px;
+  border-radius:12px;
 }
-.firmaBadge.elle{background:#6b7280}
+.firmaBadge{
+  background:#000;
+  color:#fff;
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:12px;
+}
 
-/* ACTIONS */
+/* ================= ACTIONS ================= */
 .actions{
   display:flex;
   gap:12px;
-  margin-top:18px;
+  margin-top:16px;
 }
 .btn{
   flex:1;
   padding:16px;
   border:none;
-  border-radius:20px;
+  border-radius:18px;
   font-weight:800;
 }
 .print{background:#e5e7eb}
 .wa{background:#25d366;color:#fff}
-
-/* FOOTER */
-footer{
-  text-align:center;
-  font-size:11px;
-  color:var(--muted);
-  padding:16px 0 12px;
-}
 </style>
 </head>
 
@@ -209,7 +247,7 @@ footer{
 <header>
   <div>
     <h1>ERP Mobil Reçete</h1>
-    <small>AI analiz edildi • üretim hazır</small>
+    <small>AI Destekli Üretim Paneli</small>
   </div>
   <button class="themeToggle" onclick="toggleTheme()">🌗</button>
 </header>
@@ -220,17 +258,15 @@ footer{
   <div class="tab" data-f="FILE">FİLE</div>
   <div class="tab" data-f="METRO">METRO</div>
   <div class="tab" data-f="KNORR">KNORR</div>
-  <div class="tab" data-f="ELLE DOLUM">ELLE</div>
+  <div class="tab" data-f="ELLE DOLUM">ELLE DOLUM</div>
 </div>
 
 <main>
   <div class="searchHero">
-    <input id="search" placeholder="🔍 Akıllı stok / ürün arama">
+    <input id="search" placeholder="🔍 Stok kodu / ürün adı">
   </div>
   <div id="list"></div>
 </main>
-
-<footer>© Bilal Tektaş</footer>
 
 <textarea id="RAW_DATA" style="display:none">
 Stok Kodu	Stok İsmi	Miktar
@@ -12828,15 +12864,11 @@ Toplam Maliyet	0,00
 Maliyet Katkısı	0,00	
 Malzeme Maliyeti	0,00	
 Hammadde Toplamı	1,077000	
+		
 
 </textarea>
 
 <script>
-function cleanQty(q){
-  const n=parseFloat(q.replace(",","."));
-  return isNaN(n)?q:n.toString().replace(".",",");
-}
-
 function detectFirma(n){
   n=n.toUpperCase();
   if(n.includes("DESTAN")||n.includes("EKMECİK"))return "BIM";
@@ -12845,21 +12877,25 @@ function detectFirma(n){
   if(n.includes("METRO")||n.includes("ARO")||n.includes("RIOBA")||n.includes("CHEF"))return "METRO";
   return "ELLE DOLUM";
 }
-
-function detectType(c,n){
-  n=n.toUpperCase();
-  if(n.includes("ETİKET"))return{icon:"🏷",type:"Etiket"};
-  if(n.includes("CAM")||n.includes("PET")||n.includes("ŞİŞE")||n.includes(" CC"))
-    return{icon:"🍾",type:"Şişe"};
-  if(c.startsWith("07")||n.includes("KRAFT")||n.includes("ÇUVAL")||n.includes("PP ÇUVAL")||n.includes("10 KG"))
-    return{icon:"🌿",type:"Hammadde"};
-  if(n.includes("RULO")||n.includes("RULO P.P")||n.includes("OPP")||n.includes("OPP-BOBİN"))
-    return{icon:"🎞",type:"Bobin"};
-  if(n.includes("KOLİ")||n.includes("OMK")||n.includes("KUTUSU"))
-    return{icon:"📦",type:"Koli"};
-  return{icon:"🧩",type:"Yardımcı"};
+function normalizeTR(s){
+  return s.toLocaleUpperCase("tr-TR")
+    .replace(/İ/g,"I").replace(/Ü/g,"U")
+    .replace(/Ö/g,"O").replace(/Ç/g,"C")
+    .replace(/Ğ/g,"G").replace(/Ş/g,"S");
 }
-
+function detectType(code,name){
+  const n=normalizeTR(name);
+  if(n.includes("ETIKET"))return{icon:"🏷",type:"Etiket",cls:"icon-etiket"};
+  if(n.includes("PET")||n.includes("SISE")||n.includes("CAM")||n.includes(" CC"))
+    return{icon:"🍾",type:"Şişe / Ambalaj",cls:"icon-sise"};
+  if(code.startsWith("07")||n.includes("KRAFT")||n.includes("PP CUVAL")||n.includes("CUVAL")||n.includes("10 KG")||n.includes("10KG"))
+    return{icon:"🌿",type:"Hammadde",cls:"icon-hammadde"};
+  if(n.includes("RULO")||n.includes("BOBIN")||n.includes("OPP"))
+    return{icon:"🎞",type:"Bobin",cls:"icon-bobin"};
+  if(n.includes("KOLI")||n.includes("KUTU")||n.includes("OMK"))
+    return{icon:"📦",type:"Koli",cls:"icon-koli"};
+  return{icon:"🧩",type:"Yardımcı Malzeme",cls:"icon-yardimci"};
+}
 function parseERP(t){
   const l=t.split("\n");const o=[];let c=null;
   l.forEach(x=>{
@@ -12870,76 +12906,47 @@ function parseERP(t){
     }else if(c&&x.startsWith(" ")){
       const a=x.trim().split("\t");
       Object.assign(a,detectType(a[0],a[1]));
-      c.items.push({code:a[0],name:a[1],qty:cleanQty(a[2]),icon:a.icon,type:a.type});
+      c.items.push({code:a[0],name:a[1],qty:a[2],icon:a.icon,type:a.type,cls:a.cls});
     }
   });
   return o;
 }
-
 const DATA=parseERP(RAW_DATA.value);
 let active="HOME";
-
-function waSend(p){
-  let txt=
-`*ERP MOBİL REÇETE*
-
-*Ürün:* ${p.name}
-*Kod:* ${p.code}
-*Firma:* ${p.firma}
-
-\`\`\`
---------------------------------
-MALZEME              MİKTAR
---------------------------------
-`;
-  p.items.forEach(i=>{
-    txt+=`${i.name.padEnd(22," ").slice(0,22)} ${i.qty}\n`;
-  });
-  txt+=`--------------------------------
-\`\`\``;
-  window.open("https://wa.me/?text="+encodeURIComponent(txt));
-}
-
 function render(){
   list.innerHTML="";
   const q=search.value.toLowerCase();
-  let exact=false;
   DATA.filter(p=>{
     if(active==="HOME"&&!q)return false;
-    if(active!=="HOME" && p.firma!==active)return false;
-    if(q&&(p.code+p.name).toLowerCase().includes(q))exact=true;
+    if(active!=="HOME"&&p.firma!==active)return false;
     return q?(p.code+p.name).toLowerCase().includes(q):true;
   }).forEach(p=>{
     const d=document.createElement("div");
     d.className="product";
     d.innerHTML=`
       <div class="productHeader">
-        <div>
-          <h3>${p.name}</h3>
-          <small>${p.code}</small>
-        </div>
-        <div class="firmaBadge ${p.firma==="ELLE DOLUM"?"elle":""}">${p.firma}</div>
+        <div><h3>${p.name}</h3><small>${p.code}</small></div>
+        <div class="arrow">⌄</div>
       </div>
       <div class="recipe">
         ${p.items.map(i=>`
           <div class="item">
-            <div class="iconBox">${i.icon}</div>
+            <div class="iconBox ${i.cls}">${i.icon}</div>
             <div>
               <div class="stockName">${i.name}</div>
               <div class="stockSub">${i.type}</div>
             </div>
             <div class="qty">${i.qty}</div>
-            <div class="firmaBadge ${p.firma==="ELLE DOLUM"?"elle":""}">${p.firma}</div>
+            <div class="firmaBadge">${p.firma}</div>
           </div>`).join("")}
         <div class="actions">
           <button class="btn print" onclick="event.stopPropagation();window.print()">🖨 Yazdır</button>
-          <button class="btn wa" onclick="event.stopPropagation();waSend(${JSON.stringify(p).replace(/"/g,'&quot;')})">📲 WhatsApp</button>
+          <button class="btn wa" onclick="event.stopPropagation();alert('WhatsApp hazır')">📲 WhatsApp</button>
         </div>
       </div>`;
     d.onclick=()=>d.classList.toggle("open");
     list.appendChild(d);
   });
-  search.classList.toggle("match",exact&&q);
 }
 document.querySelectorAll(".tab").forEach(t=>{
   t.onclick=()=>{
@@ -12950,7 +12957,6 @@ document.querySelectorAll(".tab").forEach(t=>{
   };
 });
 search.oninput=render;
-
 function toggleTheme(){
   document.body.dataset.theme=
     document.body.dataset.theme==="dark"?"light":"dark";
